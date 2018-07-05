@@ -4,7 +4,7 @@ class DigitalWriteCommand :
 	public Command
 {
 public:
-	DigitalWriteCommand();
+	DigitalWriteCommand(uint8_t pinNumber, uint8_t value);
 	~DigitalWriteCommand();
 	void SetPinNumber(uint8_t pinNumber);
 	void SetValue(uint8_t value);

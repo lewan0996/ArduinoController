@@ -1,11 +1,10 @@
 #include "AnalogWriteCommand.h"
 
-
-
-AnalogWriteCommand::AnalogWriteCommand()
+AnalogWriteCommand::AnalogWriteCommand(uint8_t pinNumber, uint8_t value)
 {
+	_pinNumber = pinNumber;
+	_value = value;
 }
-
 
 AnalogWriteCommand::~AnalogWriteCommand()
 {

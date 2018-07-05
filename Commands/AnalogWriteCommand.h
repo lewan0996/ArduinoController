@@ -4,7 +4,7 @@ class AnalogWriteCommand :
 	public Command
 {
 public:
-	AnalogWriteCommand();
+	AnalogWriteCommand(uint8_t pinNumber, uint8_t value);
 	~AnalogWriteCommand();
 	void Execute();
 	void SetPinNumber(uint8_t pinNumber);

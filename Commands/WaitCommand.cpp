@@ -1,11 +1,9 @@
 #include "WaitCommand.h"
 
-
-
-WaitCommand::WaitCommand()
+WaitCommand::WaitCommand(unsigned long duration)
 {
+	_duration = duration;
 }
-
 
 WaitCommand::~WaitCommand()
 {

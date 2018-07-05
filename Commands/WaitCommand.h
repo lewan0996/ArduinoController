@@ -4,7 +4,7 @@ class WaitCommand :
 	public Command
 {
 public:
-	WaitCommand();
+	WaitCommand(unsigned long duration);
 	~WaitCommand();
 	void SetDuration(unsigned long duration);
 	void Execute();
