@@ -16,5 +16,10 @@ void WaitCommand::SetDuration(unsigned long duration)
 
 void WaitCommand::Execute()
 {
+	Serial.print("Executing Wait for ");	
+	Serial.println(_duration);
+
 	delay(_duration);
+
+	Serial.println("Wait done.");
 }

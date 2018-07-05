@@ -12,8 +12,15 @@ AnalogWriteCommand::~AnalogWriteCommand()
 
 void AnalogWriteCommand::Execute()
 {
+	Serial.print("Executing analog write ");
+	Serial.print(_value);
+	Serial.print(" to pin ");
+	Serial.println(_pinNumber);
+
 	pinMode(_pinNumber, OUTPUT);
 	analogWrite(_pinNumber, _value);
+
+	Serial.println("AnalogWrite Done.");
 }
 
 void AnalogWriteCommand::SetPinNumber(uint8_t pinNumber)

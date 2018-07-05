@@ -22,6 +22,13 @@ void DigitalWriteCommand::SetValue(uint8_t value)
 
 void DigitalWriteCommand::Execute()
 {
+	Serial.print("Executing digital write ");
+	Serial.print(_value);
+	Serial.print(" to pin ");
+	Serial.println(_pinNumber);
+
 	pinMode(_pinNumber, OUTPUT);
 	digitalWrite(_pinNumber, _value);
+
+	Serial.println("DigitalWrite Done.");
 }
