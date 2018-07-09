@@ -1,8 +1,8 @@
 #include "NegateCommand.h"
 
-NegateCommand::NegateCommand(uint8_t pinNumber)
+NegateCommand::NegateCommand(CommandArgs* args) : Command(args)
 {
-	_pinNumber = pinNumber;
+	_pinNumber = args->PinNumber;
 }
 
 NegateCommand::~NegateCommand()

@@ -1,9 +1,9 @@
 #include "DigitalWriteCommand.h"
 
-DigitalWriteCommand::DigitalWriteCommand(uint8_t pinNumber, uint8_t value)
+DigitalWriteCommand::DigitalWriteCommand(CommandArgs* args) : Command(args)
 {
-	_pinNumber = pinNumber;
-	_value = value;
+	_pinNumber = args->PinNumber;
+	_value = args->Value;
 }
 
 DigitalWriteCommand::~DigitalWriteCommand()

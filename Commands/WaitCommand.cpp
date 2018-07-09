@@ -1,8 +1,8 @@
 #include "WaitCommand.h"
 
-WaitCommand::WaitCommand(unsigned long duration)
+WaitCommand::WaitCommand(CommandArgs* args) : Command(args)
 {
-	_duration = duration;
+	_duration = args->Duration;
 }
 
 WaitCommand::~WaitCommand()

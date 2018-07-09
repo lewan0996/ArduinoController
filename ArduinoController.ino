@@ -18,6 +18,7 @@
 //
 
 // The setup() function runs once each time the micro-controller starts
+#include "Procedure.h"
 #include "Command.h"
 #include "StringHelpers.h";
 #include "CommandFactory.h";
@@ -25,19 +26,17 @@
 void setup()
 {
 	Serial.begin(9600);
-	char* procedureString = "W_3000|DW_5_1|W_2000|AW_5_50|W_5000|N_5";
-	std::vector<char*> commandStrings = StringHelpers::Split(procedureString, "|");
-	std::vector<Command*> commands;
+	char* procedureJson = "[{\"name\":\"DigitalWrite\",\"pinNumber\":5, \"value\":1, \"order\":1},{\"name\":\"Wait\", \"duration\":5000,\"order\":0}]";
+	CommandFactory* commandFactory = new CommandFactory();
+	Procedure* procedure = new Procedure(commandFactory);
 
-	for (int i = 0; i < commandStrings.size(); i++)
-	{
-		commands.push_back(CommandFactory::CreateCommand(commandStrings[i]));
-	}
-
-	for (int i = 0; i < commands.size(); i++)
-	{
-		commands[i]->Execute();
-	}
+	Serial.println("Parsing json...");
+	procedure->LoadJson(procedureJson);
+	Serial.println("Parsing done...");
+	Serial.println("Executing procedure...");
+	procedure->Execute();
+	Serial.println("Procedure executed");
+	
 }
 
 // Add the main program code into the continuous loop() function

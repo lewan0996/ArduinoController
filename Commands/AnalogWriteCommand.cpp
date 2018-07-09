@@ -1,9 +1,9 @@
 #include "AnalogWriteCommand.h"
 
-AnalogWriteCommand::AnalogWriteCommand(uint8_t pinNumber, uint8_t value)
+AnalogWriteCommand::AnalogWriteCommand(CommandArgs* args) :Command(args)
 {
-	_pinNumber = pinNumber;
-	_value = value;
+	_pinNumber = args->PinNumber;
+	_value = args->Value;
 }
 
 AnalogWriteCommand::~AnalogWriteCommand()
