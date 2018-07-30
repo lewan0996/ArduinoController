@@ -13,26 +13,12 @@
 int accessPointStartTime;
 int accessPointDuration = 30000;
 bool isAccessPointInitializationDone;
+CommandFactory* commandFactory = new CommandFactory();
 
 void setup()
 {
-	Serial.begin(9600);
-	char* procedureJson = "[{\"name\":\"DigitalWrite\",\"pinNumber\":5, \"value\":1, \"order\":1},{\"name\":\"Wait\", \"dura";
-	CommandFactory* commandFactory = new CommandFactory();
-	Procedure* procedure = new Procedure(commandFactory);
-
-	Serial.println("Parsing json...");
-	procedure->LoadJson(procedureJson);
-	if (procedure->isValid)
-	{
-		Serial.println("Parsing done...");
-		Serial.println("Executing procedure...");
-		procedure->Execute();
-		Serial.println("Procedure executed");
-	}
-
-	delete procedure;
-
+	Serial.begin(9600);	
+	
 	String macAddress = WiFi.macAddress();
 	String SSID = "ESP_" + macAddress;
 	Serial.println("Enabling access point with SSID: " + SSID);
@@ -45,6 +31,23 @@ void setup()
 	{
 		Serial.println("Enabling access point failed");
 	}	
+}
+
+void HandleMessage(char* message) 
+{
+	Procedure* procedure = new Procedure(commandFactory);
+
+	Serial.println("Parsing json...");
+	procedure->LoadJson(message);
+	if (procedure->isValid)
+	{
+		Serial.println("Parsing done...");
+		Serial.println("Executing procedure...");
+		procedure->Execute();
+		Serial.println("Procedure executed");
+	}
+
+	delete procedure;
 }
 
 void loop()
