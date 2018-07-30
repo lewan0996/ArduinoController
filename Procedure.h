@@ -20,6 +20,7 @@ public:
 	void Execute();
 	void LoadJson(char* procedureJson);
 	std::vector<Command*> Commands;
+	bool isValid;
 private:
 	CommandFactory * _commandFactory;
 };

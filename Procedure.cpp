@@ -7,7 +7,6 @@ Procedure::Procedure(CommandFactory* commandFactory)
 
 Procedure::~Procedure()
 {
-	delete _commandFactory;
 	for (int i = 0; i < Commands.size(); i++) 
 	{
 		delete Commands[i];
@@ -29,6 +28,15 @@ void Procedure::LoadJson(char * procedureJson)
 	JsonArray& commandsArray = jsonBuffer.parseArray(procedureJson);
 
 	size_t commandsArraySize = commandsArray.size();
+
+	if (commandsArraySize == 0) 
+	{
+		Serial.println("Procedure json is invalid");
+		isValid = false;
+		return;
+	}
+	
+	isValid = true;
 
 	for (int i = 0; i < commandsArraySize; i++) 
 	{
