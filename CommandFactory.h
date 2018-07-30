@@ -7,7 +7,7 @@
 #include "Commands/NegateCommand.h";
 #include "Commands/WaitCommand.h";
 #include "StringHelpers.h";
-#include <map>;
+#include "map";
 #include "CommandArgs.h";
 
 #if defined(ARDUINO) && ARDUINO >= 100
@@ -25,7 +25,7 @@ public:
 	~CommandFactory();
 	Command* CreateCommand(const char* commandName, CommandArgs* args);
 private:
-	std::map<const char*, Command*(*)(CommandArgs* args), CompareCStrings> _commands;
+	std::map<const char*, std::function<Command*(CommandArgs* args)>, CompareCStrings> _commands;
 };
 
 #endif

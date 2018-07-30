@@ -20,5 +20,10 @@ CommandFactory::~CommandFactory()
 
 Command* CommandFactory::CreateCommand(const char* commandName, CommandArgs* args)
 {
-	return (_commands[commandName])(args);	
+	auto command = _commands[commandName];
+	if (!command)
+	{
+		return NULL;
+	}
+	return (command)(args);	
 }

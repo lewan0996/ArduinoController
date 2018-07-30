@@ -21,36 +21,48 @@ void Procedure::Execute()
 	}	
 }
 
-void Procedure::LoadJson(char * procedureJson)
+void Procedure::LoadJson(const char * procedureJson)
 {
-	StaticJsonBuffer<200> jsonBuffer;
+	DynamicJsonBuffer jsonBuffer;
 
-	JsonArray& commandsArray = jsonBuffer.parseArray(procedureJson);
+	JsonObject& payload = jsonBuffer.parseObject(procedureJson);
+
+	JsonArray& commandsArray = payload["commands"];
 
 	size_t commandsArraySize = commandsArray.size();
 
 	if (commandsArraySize == 0) 
 	{
-		Serial.println("Procedure json is invalid");
-		isValid = false;
+		Serial.println("Procedure json is invalid - array parse error");		
 		return;
-	}
-	
-	isValid = true;
+	}	
 
 	for (int i = 0; i < commandsArraySize; i++) 
 	{
 		JsonObject& commandJson = commandsArray[i];
 		const char* commandName = commandJson["name"];
+		if (commandName == nullptr)
+		{
+			Serial.println("Procedure json is invalid - command name parse error");
+			return;
+		}
 		CommandArgs* args = new CommandArgs();
 		args->Duration = commandJson["duration"];
 		args->Order = commandJson["order"];
 		args->PinNumber = commandJson["pinNumber"];
 		args->Value = commandJson["value"];	
+
 		Command* command = _commandFactory->CreateCommand(commandName, args);
 
-		Commands.push_back(command);		
+		if (command == NULL)
+		{
+			Serial.println("Procedure json is invalid - there is no such command");
+			return;
+		}
+				
+		Commands.push_back(command);
 	}
 
 	std::sort(Commands.begin(), Commands.end(), Command::Compare);
+	isValid = true;
 }

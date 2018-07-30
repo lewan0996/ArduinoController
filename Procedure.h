@@ -18,9 +18,9 @@ public:
 	Procedure(CommandFactory* commandFactory);
 	~Procedure();
 	void Execute();
-	void LoadJson(char* procedureJson);
+	void LoadJson(const char* procedureJson);
 	std::vector<Command*> Commands;
-	bool isValid;
+	bool isValid = false;
 private:
 	CommandFactory * _commandFactory;
 };
