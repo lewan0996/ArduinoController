@@ -52,7 +52,8 @@ void SetupIoTHubClient()
 	{
 		Serial.println("Failed to initalize IoT Hub client");
 	}
-	IOTHUB_CLIENT_RESULT result = IoTHubClient_LL_SetMessageCallback(iotHubClientHandle, receiveMessageCallback, NULL);
+	//IOTHUB_CLIENT_RESULT result = IoTHubClient_LL_SetMessageCallback(iotHubClientHandle, receiveMessageCallback, NULL);
+	IOTHUB_CLIENT_RESULT result = IoTHubClient_LL_SetDeviceMethodCallback(iotHubClientHandle, deviceMethodCallback, NULL);
 
 	Serial.println(result);
 
@@ -152,6 +153,19 @@ void initTime()
 			break;
 		}
 	}
+}
+
+int deviceMethodCallback(const char *methodName, const unsigned char *payload, size_t size, unsigned char **response, size_t *response_size, void *userContextCallback)
+{
+	Serial.printf("Try to invoke method %s.\r\n", methodName);
+	const char *responseMessage = "success";
+	int result = 200;		
+
+	*response_size = strlen(responseMessage);
+	*response = (unsigned char *)malloc(*response_size);
+	strncpy((char *)(*response), responseMessage, *response_size);
+
+	return result;
 }
 
 void loop()
