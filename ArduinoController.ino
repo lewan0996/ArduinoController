@@ -4,6 +4,7 @@
 	Author:     MARCIN-LZ50-70\Marcin Lewandowski
 */
 
+#include "IoTHubClient.h"
 #include <ArduinoJson.hpp>
 #include <ArduinoJson.h>
 #include "ESP8266WiFi.h"
@@ -11,27 +12,28 @@
 #include "Command.h"
 #include "StringHelpers.h";
 #include "CommandFactory.h";
-#include <AzureIoTHub.h>
-#include <AzureIoTProtocol_MQTT.h>
-#include <AzureIoTUtility.h>
 
 int accessPointStartTime;
 int accessPointDuration = 30000;
 const char* ioTHubconnectionString = "HostName=arduino-controller-iot-hub.azure-devices.net;DeviceId=ESP_A0:20:A6:01:07:C0;SharedAccessKey=LlysjPcI/1B/VXVdJPN/YhaCMlPpUdoCH9aONlfsRZ0=";
 bool isAccessPointInitializationDone;
 CommandFactory* commandFactory = new CommandFactory();
-IOTHUB_CLIENT_LL_HANDLE iotHubClientHandle;
+IoTHubClient* ioTHubClient;
+
+std::pair<int, char*> HandleDirectMethodCallback(const char* methodName, const char* payload);
+const char* GenerateIoTHubConnectionString(const char* macAddress);
+
 
 void setup()
 {
 	Serial.begin(9600);
 
-	initWifi();
-	initTime();
+	initWifi();	
 
-	SetupIoTHubClient();
+	String macAddress = WiFi.macAddress();
 
-	/*String macAddress = WiFi.macAddress();
+	ioTHubClient = new IoTHubClient(GenerateIoTHubConnectionString(macAddress.c_str()), HandleDirectMethodCallback);
+
 	String SSID = "ESP_" + macAddress;
 	Serial.println("Enabling access point with SSID: " + SSID);
 	bool accessPointEnabled = WiFi.softAP(SSID.c_str());
@@ -42,137 +44,12 @@ void setup()
 	else
 	{
 		Serial.println("Enabling access point failed");
-	}*/
-}
-
-void SetupIoTHubClient()
-{
-	iotHubClientHandle = IoTHubClient_LL_CreateFromConnectionString(ioTHubconnectionString, MQTT_Protocol);
-	if (iotHubClientHandle == NULL)
-	{
-		Serial.println("Failed to initalize IoT Hub client");
 	}
-	//IOTHUB_CLIENT_RESULT result = IoTHubClient_LL_SetMessageCallback(iotHubClientHandle, receiveMessageCallback, NULL);
-	IOTHUB_CLIENT_RESULT result = IoTHubClient_LL_SetDeviceMethodCallback(iotHubClientHandle, deviceMethodCallback, NULL);
-
-	Serial.println(result);
-
-	Serial.println("IoT hub initialized");
-}
-
-IOTHUBMESSAGE_DISPOSITION_RESULT receiveMessageCallback(IOTHUB_MESSAGE_HANDLE message, void *userContextCallback)
-{
-	IOTHUBMESSAGE_DISPOSITION_RESULT result;
-	const unsigned char *buffer;
-	size_t size;
-	if (IoTHubMessage_GetByteArray(message, &buffer, &size) != IOTHUB_MESSAGE_OK)
-	{
-		Serial.println("Unable to IoTHubMessage_GetByteArray.");
-		result = IOTHUBMESSAGE_REJECTED;
-	}
-	else
-	{
-		/*buffer is not zero terminated*/
-		char *temp = (char *)malloc(size + 1);
-
-		if (temp == NULL)
-		{
-			return IOTHUBMESSAGE_ABANDONED;
-		}
-
-		strncpy(temp, (const char *)buffer, size);
-		temp[size] = '\0';
-		Serial.println(temp);
-		if (!HandleMessage(temp))
-		{
-			free(temp);
-			return IOTHUBMESSAGE_ABANDONED;			
-		}
-		free(temp);
-	}
-	return IOTHUBMESSAGE_ACCEPTED;
-}
-
-void initWifi()
-{
-	const char* ssid = "dupsko";
-	const char* pass = "dupsko123";
-	// Attempt to connect to Wifi network:
-	Serial.printf("Attempting to connect to SSID: %s.\r\n", ssid);
-
-	// Connect to WPA/WPA2 network. Change this line if using open or WEP network:
-	WiFi.begin(ssid, pass);
-	while (WiFi.status() != WL_CONNECTED)
-	{
-		WiFi.begin(ssid, pass);
-		delay(5000);
-	}
-	Serial.printf("Connected to wifi %s.\r\n", ssid);
-}
-
-bool HandleMessage(const char* message)
-{
-	Procedure* procedure = new Procedure(commandFactory);
-
-	Serial.println("Parsing json...");
-	procedure->LoadJson(message);
-	if (procedure->isValid)
-	{
-		Serial.println("Parsing done...");
-		Serial.println("Executing procedure...");
-		procedure->Execute();
-		Serial.println("Procedure executed");
-
-		delete procedure;
-		return true;
-	}
-	else 
-	{
-		delete procedure;
-		return false;
-	}	
-}
-
-void initTime()
-{
-	time_t epochTime;
-	configTime(0, 0, "pool.ntp.org", "time.nist.gov");
-
-	while (true)
-	{
-		epochTime = time(NULL);
-
-		if (epochTime == 0)
-		{
-			Serial.println("Fetching NTP epoch time failed! Waiting 2 seconds to retry.");
-			delay(2000);
-		}
-		else
-		{
-			Serial.printf("Fetched NTP epoch time is: %lu.\r\n", epochTime);
-			break;
-		}
-	}
-}
-
-int deviceMethodCallback(const char *methodName, const unsigned char *payload, size_t size, unsigned char **response, size_t *response_size, void *userContextCallback)
-{
-	Serial.printf("Try to invoke method %s.\r\n", methodName);
-	const char *responseMessage = "success";
-	int result = 200;		
-
-	*response_size = strlen(responseMessage);
-	*response = (unsigned char *)malloc(*response_size);
-	strncpy((char *)(*response), responseMessage, *response_size);
-
-	return result;
 }
 
 void loop()
-{
-	IoTHubClient_LL_DoWork(iotHubClientHandle);
-	delay(1000);
-	/*if (millis() - accessPointStartTime > accessPointDuration && !isAccessPointInitializationDone)
+{		
+	if (!isAccessPointInitializationDone && millis() - accessPointStartTime > accessPointDuration)
 	{
 		Serial.println("Disabling access point");
 		bool accessPointDisabled = WiFi.softAPdisconnect();
@@ -188,6 +65,88 @@ void loop()
 
 		isAccessPointInitializationDone = true;
 		initWifi();
-		SetupIoTHubClient();
-	}*/
+
+		ioTHubClient->Initialize();
+	}
+	else
+	{
+		ioTHubClient->DoWork();
+		delay(10);
+	}
+}
+
+const char* GenerateIoTHubConnectionString(const char* macAddress)
+{
+	char* result;
+	strcpy(result, "HostName=arduino-controller-iot-hub.azure-devices.net;DeviceId=ESP_");
+	strcpy(result, macAddress);
+	strcpy(result, "SharedAccessKey=");
+	strcpy(result, "LlysjPcI/1B/VXVdJPN/YhaCMlPpUdoCH9aONlfsRZ0=");
+}
+
+void initWifi()
+{
+	const char* ssid = "dupsko";
+	const char* pass = "dupsko123"; // do zmiany
+
+	Serial.printf("Attempting to connect to SSID: %s.\r\n", ssid);
+
+	WiFi.begin(ssid, pass);
+	while (WiFi.status() != WL_CONNECTED)
+	{
+		WiFi.begin(ssid, pass);
+		delay(5000);
+	}
+	Serial.printf("Connected to wifi %s.\r\n", ssid);
+}
+
+bool HandleExecuteProcedureCall(const char* payload)
+{
+	Procedure* procedure = new Procedure(commandFactory);
+
+	Serial.println("Parsing json...");
+	procedure->LoadJson(payload);
+	if (procedure->isValid)
+	{
+		Serial.println("Parsing done...");
+		Serial.println("Executing procedure...");
+		procedure->Execute();
+		Serial.println("Procedure executed");
+
+		delete procedure;
+		return true;
+	}
+	else
+	{
+		delete procedure;
+		return false;
+	}
+}
+
+std::pair<int, char*> HandleDirectMethodCallback(const char* methodName, const char* payload)
+{
+	int statusCode;
+	char* responseMessage;
+	if (strcmp(methodName, "ExecuteProcedure"))
+	{
+		bool result = HandleExecuteProcedureCall(reinterpret_cast<const char*>(payload));
+
+		if (result)
+		{
+			statusCode = 200;
+			responseMessage = "\"Method executed successfully\"";
+		}
+		else
+		{
+			statusCode = 500;
+			responseMessage = "\"An error occured while invoking the method\"";
+		}
+	}
+	else
+	{
+		statusCode = 404;
+		responseMessage = "\"There is no such method\"";
+	}
+
+	return std::pair<int, char*>(statusCode, responseMessage);
 }
