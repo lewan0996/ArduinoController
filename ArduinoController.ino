@@ -4,6 +4,7 @@
 	Author:     MARCIN-LZ50-70\Marcin Lewandowski
 */
 
+#include <Hash.h>
 #include "IoTHubClient.h"
 #include <ArduinoJson.hpp>
 #include <ArduinoJson.h>
@@ -15,7 +16,7 @@
 
 int accessPointStartTime;
 int accessPointDuration = 10000;
-//const char* ioTHubconnectionString = "HostName=arduino-controller-iot-hub.azure-devices.net;DeviceId=ESP_A0:20:A6:01:07:C0;SharedAccessKey=LlysjPcI/1B/VXVdJPN/YhaCMlPpUdoCH9aONlfsRZ0=";
+
 bool isAccessPointInitializationDone;
 CommandFactory* commandFactory = new CommandFactory();
 IoTHubClient* ioTHubClient;
@@ -30,6 +31,8 @@ void setup()
 	String macAddress = WiFi.macAddress();
 
 	String connectionString = GenerateIoTHubConnectionString(macAddress);
+
+	Serial.println(connectionString);
 
 	ioTHubClient = new IoTHubClient(connectionString, HandleDirectMethodCallback);
 
@@ -79,7 +82,9 @@ String GenerateIoTHubConnectionString(String macAddress)
 	String result = "HostName=arduino-controller-iot-hub.azure-devices.net;DeviceId=ESP_";
 	result += macAddress;
 	result += ";SharedAccessKey=";
-	result += "LlysjPcI/1B/VXVdJPN/YhaCMlPpUdoCH9aONlfsRZ0=";
+	String hash = sha1(macAddress);
+	hash.toUpperCase();
+	result += hash;
 
 	return result;
 }
