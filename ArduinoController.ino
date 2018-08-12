@@ -14,25 +14,24 @@
 #include "CommandFactory.h";
 
 int accessPointStartTime;
-int accessPointDuration = 30000;
-const char* ioTHubconnectionString = "HostName=arduino-controller-iot-hub.azure-devices.net;DeviceId=ESP_A0:20:A6:01:07:C0;SharedAccessKey=LlysjPcI/1B/VXVdJPN/YhaCMlPpUdoCH9aONlfsRZ0=";
+int accessPointDuration = 10000;
+//const char* ioTHubconnectionString = "HostName=arduino-controller-iot-hub.azure-devices.net;DeviceId=ESP_A0:20:A6:01:07:C0;SharedAccessKey=LlysjPcI/1B/VXVdJPN/YhaCMlPpUdoCH9aONlfsRZ0=";
 bool isAccessPointInitializationDone;
 CommandFactory* commandFactory = new CommandFactory();
 IoTHubClient* ioTHubClient;
 
-std::pair<int, char*> HandleDirectMethodCallback(const char* methodName, const char* payload);
-const char* GenerateIoTHubConnectionString(const char* macAddress);
-
+std::pair<int, char*> HandleDirectMethodCallback(const char* methodName, const char* payload, size_t payloadSize);
+String GenerateIoTHubConnectionString(String macAddress);
 
 void setup()
 {
 	Serial.begin(9600);
 
-	initWifi();	
-
 	String macAddress = WiFi.macAddress();
 
-	ioTHubClient = new IoTHubClient(GenerateIoTHubConnectionString(macAddress.c_str()), HandleDirectMethodCallback);
+	String connectionString = GenerateIoTHubConnectionString(macAddress);
+
+	ioTHubClient = new IoTHubClient(connectionString, HandleDirectMethodCallback);
 
 	String SSID = "ESP_" + macAddress;
 	Serial.println("Enabling access point with SSID: " + SSID);
@@ -48,13 +47,13 @@ void setup()
 }
 
 void loop()
-{		
+{
 	if (!isAccessPointInitializationDone && millis() - accessPointStartTime > accessPointDuration)
 	{
 		Serial.println("Disabling access point");
 		bool accessPointDisabled = WiFi.softAPdisconnect();
 
-		if(accessPointDisabled)
+		if (accessPointDisabled)
 		{
 			Serial.println("Access point disabled");
 		}
@@ -68,20 +67,21 @@ void loop()
 
 		ioTHubClient->Initialize();
 	}
-	else
+	else if (isAccessPointInitializationDone)
 	{
 		ioTHubClient->DoWork();
 		delay(10);
 	}
 }
 
-const char* GenerateIoTHubConnectionString(const char* macAddress)
+String GenerateIoTHubConnectionString(String macAddress)
 {
-	char* result;
-	strcpy(result, "HostName=arduino-controller-iot-hub.azure-devices.net;DeviceId=ESP_");
-	strcpy(result, macAddress);
-	strcpy(result, "SharedAccessKey=");
-	strcpy(result, "LlysjPcI/1B/VXVdJPN/YhaCMlPpUdoCH9aONlfsRZ0=");
+	String result = "HostName=arduino-controller-iot-hub.azure-devices.net;DeviceId=ESP_";
+	result += macAddress;
+	result += ";SharedAccessKey=";
+	result += "LlysjPcI/1B/VXVdJPN/YhaCMlPpUdoCH9aONlfsRZ0=";
+
+	return result;
 }
 
 void initWifi()
@@ -102,8 +102,7 @@ void initWifi()
 
 bool HandleExecuteProcedureCall(const char* payload)
 {
-	Procedure* procedure = new Procedure(commandFactory);
-
+	Procedure* procedure = new Procedure(commandFactory);	
 	Serial.println("Parsing json...");
 	procedure->LoadJson(payload);
 	if (procedure->isValid)
@@ -123,13 +122,17 @@ bool HandleExecuteProcedureCall(const char* payload)
 	}
 }
 
-std::pair<int, char*> HandleDirectMethodCallback(const char* methodName, const char* payload)
+std::pair<int, char*> HandleDirectMethodCallback(const char* methodName, const char* payload, size_t payloadSize)
 {
 	int statusCode;
 	char* responseMessage;
-	if (strcmp(methodName, "ExecuteProcedure"))
+	if (strcmp(methodName, "ExecuteProcedure") == 0)
 	{
-		bool result = HandleExecuteProcedureCall(reinterpret_cast<const char*>(payload));
+		char* payloadValue = (char *)malloc(payloadSize + 1);
+		strncpy(payloadValue, payload, payloadSize);
+		payloadValue[payloadSize] = '\0';		
+
+		bool result = HandleExecuteProcedureCall(payloadValue);
 
 		if (result)
 		{

@@ -1,22 +1,33 @@
 #include "IoTHubClient.h"
 
-IoTHubClient::IoTHubClient(const char * connectionString, std::pair<int, char*>(*handleDirectMethodCallback)(const char *methodName, const char *payload))
+IoTHubClient* IoTHubClient::Instance;
+
+IoTHubClient::IoTHubClient(String connectionString, std::pair<int, char*>(*handleDirectMethodCallback)(const char *methodName, const char *payload, size_t payloadSize))
 {
 	HandleDirectMethodCallback = handleDirectMethodCallback;
 	_connectionString = connectionString;
+	Serial.println(_connectionString);
+	IoTHubClient::Instance = this; // solution to member function vs "normal" function pointer
+}
+
+int DeviceMethodCallback_NonMember(const char * methodName, const unsigned char * payload, size_t size, unsigned char ** response, size_t * response_size, void * userContextCallback)
+{
+	return IoTHubClient::Instance->DeviceMethodCallback(methodName, payload, size, response, response_size, userContextCallback);
 }
 
 void IoTHubClient::Initialize()
 {
-	InitTime();
-
-	_iotHubClientHandle = IoTHubClient_LL_CreateFromConnectionString(ioTHubconnectionString, MQTT_Protocol);
+	Serial.println("Initializing IoTHub client...");
+	InitTime();	
+	
+	_iotHubClientHandle = IoTHubClient_LL_CreateFromConnectionString(_connectionString.c_str(), MQTT_Protocol);
 	if (_iotHubClientHandle == NULL)
 	{
 		Serial.println("Failed to initalize IoT Hub client");
+		return;
 	}
-
-	IOTHUB_CLIENT_RESULT result = IoTHubClient_LL_SetDeviceMethodCallback(_iotHubClientHandle, DeviceMethodCallback, NULL);
+	
+	IOTHUB_CLIENT_RESULT result = IoTHubClient_LL_SetDeviceMethodCallback(_iotHubClientHandle, DeviceMethodCallback_NonMember, NULL);
 
 	Serial.println(result);
 	Serial.println("IoT hub initialized");
@@ -27,11 +38,11 @@ void IoTHubClient::DoWork()
 	IoTHubClient_LL_DoWork(_iotHubClientHandle);
 }
 
-int IoTHubClient::DeviceMethodCallback(const char * methodName, const unsigned char * payload, size_t size, unsigned char ** response, size_t * response_size, void * userContextCallback)
+int IoTHubClient::DeviceMethodCallback(const char * methodName, const unsigned char * payload, size_t payloadSize, unsigned char ** response, size_t * response_size, void * userContextCallback)
 {
 	Serial.printf("Try to invoke method %s.\r\n", methodName);		
 
-	std::pair<int, char*> result = HandleDirectMethodCallback(methodName, reinterpret_cast<const char*>(payload));
+	std::pair<int, char*> result = HandleDirectMethodCallback(methodName, reinterpret_cast<const char*>(payload), payloadSize);
 
 	*response_size = strlen(result.second);
 	*response = (unsigned char *)malloc(*response_size);
