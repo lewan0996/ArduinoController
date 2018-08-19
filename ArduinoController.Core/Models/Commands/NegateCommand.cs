@@ -2,6 +2,6 @@
 {
     public class NegateCommand: Command
     {
-        public uint PinNumber { get; set; }
+        public byte PinNumber { get; set; }
     }
 }

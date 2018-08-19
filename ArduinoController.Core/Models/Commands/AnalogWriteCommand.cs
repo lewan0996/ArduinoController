@@ -2,7 +2,7 @@
 {
     public class AnalogWriteCommand : Command
     {
-        public ushort PinNumber { get; set; }
-        public uint Value { get; set; }
+        public byte PinNumber { get; set; }
+        public byte Value { get; set; }
     }
 }

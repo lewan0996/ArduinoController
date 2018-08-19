@@ -2,7 +2,7 @@
 {
     public class DigitalWriteCommand : Command
     {
-        public uint PinNumber { get; set; }
+        public byte PinNumber { get; set; }
         public bool Value { get; set; }
     }
 }

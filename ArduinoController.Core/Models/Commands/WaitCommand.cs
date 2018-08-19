@@ -2,6 +2,6 @@
 {
     public class WaitCommand : Command
     {
-        public uint Duration { get; set; }
+        public int Duration { get; set; }
     }
 }
