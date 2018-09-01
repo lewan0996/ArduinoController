@@ -1,4 +1,5 @@
-﻿using ArduinoController.Core.Contract.DataAccess;
+﻿using System.Linq;
+using ArduinoController.Core.Contract.DataAccess;
 using Microsoft.EntityFrameworkCore;
 
 namespace ArduinoController.DataAccess
@@ -23,6 +24,11 @@ namespace ArduinoController.DataAccess
         public T Get(int id)
         {
             return _set.Find(id);
+        }
+
+        public IQueryable<T> GetAll()
+        {
+            return _set;
         }
     }
 }

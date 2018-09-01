@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using ArduinoController.Core.Models;
+﻿using System.Linq;
 
 namespace ArduinoController.Core.Contract.DataAccess
 {
@@ -8,5 +7,6 @@ namespace ArduinoController.Core.Contract.DataAccess
         T Add(T entity);
         void Delete(T entity);
         T Get(int id);
+        IQueryable<T> GetAll();
     }
 }

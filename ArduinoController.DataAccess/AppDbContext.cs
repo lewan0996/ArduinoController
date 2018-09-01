@@ -26,14 +26,19 @@ namespace ArduinoController.DataAccess
 
             modelBuilder.Entity<Procedure>().HasKey(p => new { p.UserId, p.Name });
 
+            modelBuilder.Entity<Procedure>()
+                .HasOne(p => p.Device)
+                .WithMany();
+
             modelBuilder.Entity<ApplicationUser>()
                 .HasMany(u => u.Procedures)
                 .WithOne()
-                .HasForeignKey(p => p.UserId);
+                .IsRequired();
 
             modelBuilder.Entity<ApplicationUser>()
                 .HasMany(u => u.Devices)
-                .WithOne();
+                .WithOne()
+                .IsRequired();
 
             modelBuilder.Entity<ArduinoDevice>().HasKey(d => d.MacAddress);
         }
