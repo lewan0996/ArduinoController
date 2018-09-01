@@ -6,17 +6,22 @@ namespace ArduinoController.DataAccess
     public class EfUnitOfWork : IUnitOfWork
     {
         private readonly AppDbContext _context;
-        private readonly IDbContextTransaction _transaction;
+        private IDbContextTransaction _transaction;
         private bool _shouldRollback;
+        private bool _disposed;
 
         public EfUnitOfWork(AppDbContext context)
         {
             _context = context;
-            _transaction = context.Database.BeginTransaction();
             _shouldRollback = true;
         }
         public void Dispose()
         {
+            if (_disposed)
+            {
+                return;
+            }
+
             if (_shouldRollback)
             {
                 _transaction.Rollback();
@@ -28,6 +33,14 @@ namespace ArduinoController.DataAccess
 
             _transaction.Dispose();
             _context.Dispose();
+
+            _disposed = true;
+        }
+
+        public IUnitOfWork Create()
+        {
+           _transaction = _context.Database.BeginTransaction();
+            return this;
         }
 
         public void Commit()

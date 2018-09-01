@@ -1,43 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.Net;
 using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
+using ArduinoController.Api.Auth;
 using ArduinoController.Api.Dto;
+using ArduinoController.Core.Contract.DataAccess;
 using ArduinoController.DataAccess;
-using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
 namespace ArduinoController.Api.Controllers
 {
     [Produces("application/json")]
     [Route("api/Users")]
-    [Authorize]
     public class UsersController : Controller
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IConfiguration _configuration;
+        private readonly IAuthenticationService _authenticationService;
+        private readonly IUnitOfWork _unitOfWork;
 
         public UsersController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager,
-            IConfiguration configuration)
+            IAuthenticationService authenticationService, IUnitOfWork unitOfWork)
         {
             _signInManager = signInManager;
             _userManager = userManager;
-            _configuration = configuration;
+            _authenticationService = authenticationService;
+            _unitOfWork = unitOfWork;
         }
 
-        [HttpGet("test")]
-        public IActionResult Test()
-        {
-            return Ok(User.Identity.Name);
-        }
-
-        [AllowAnonymous]
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody]AuthDto dto)
         {
@@ -61,7 +53,6 @@ namespace ArduinoController.Api.Controllers
         }
 
         [HttpPost("login")]
-        [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody]AuthDto dto)
         {
             if (dto == null)
@@ -71,26 +62,48 @@ namespace ArduinoController.Api.Controllers
 
             var user = await _userManager.FindByEmailAsync(dto.Email);
 
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
             var signInResult =
                 await _signInManager.CheckPasswordSignInAsync(user, dto.Password, false);
 
             if (!signInResult.Succeeded) return Unauthorized();
 
-            var jwtConfig = _configuration.GetSection("Jwt");
+            string token;
+            string refreshToken;
+            using (var uow = _unitOfWork.Create())
+            {
+                refreshToken = await _authenticationService.GenerateAndSaveRefreshTokenAsync(dto.Email);
+                token = _authenticationService.GenerateToken(new[] { new Claim(ClaimTypes.Name, dto.Email) });
 
-            var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfig["Key"]));
-            var credentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
+                uow.Commit();
+            }
 
-            var tokenOptions = new JwtSecurityToken(
-                issuer: jwtConfig["Issuer"],
-                audience: jwtConfig["Audience"],
-                claims: new List<Claim> { new Claim(ClaimTypes.Name, dto.Email) },
-                expires: DateTime.Now.AddMinutes(int.Parse(jwtConfig["MinutesToExpire"])),
-                signingCredentials: credentials);
+            return Ok(new { Token = token, RefreshToken = refreshToken });
+        }
 
-            var token = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
+        [HttpPost("refresh")]
+        public async Task<IActionResult> Refresh([FromBody]RefreshTokenDto dto)
+        {
+            (string Token, string RefreshToken) newTokens;
+            var uow = _unitOfWork.Create();
 
-            return Ok(new {Token = token});
+            try
+            {
+                newTokens = await _authenticationService.Refresh(dto.Token, dto.RefreshToken);
+                uow.Commit();
+                uow.Dispose();
+            }
+            catch (SecurityTokenException ex)
+            {
+                uow.Dispose();
+                return BadRequest(ex.Message);
+            }
+            
+            return Ok(new { newTokens.Token, newTokens.RefreshToken });
         }
     }
 }

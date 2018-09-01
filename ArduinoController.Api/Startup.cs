@@ -1,5 +1,6 @@
-﻿using System.Security.Claims;
-using System.Text;
+﻿using System.Text;
+using System.Threading.Tasks;
+using ArduinoController.Api.Auth;
 using ArduinoController.Core.Contract.DataAccess;
 using ArduinoController.DataAccess;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -54,10 +55,24 @@ namespace ArduinoController.Api
                         ValidAudience = jwtConfig["Audience"],
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfig["Key"]))
                     };
+
+                    opts.Events = new JwtBearerEvents
+                    {
+                        OnAuthenticationFailed = context =>
+                        {
+                            if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
+                            {
+                                context.Response.Headers.Add("Token-Expired", "true");
+                            }
+
+                            return Task.CompletedTask;
+                        }
+                    };
                 });
 
             services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
             services.AddScoped<IUnitOfWork, EfUnitOfWork>();
+            services.AddScoped<IAuthenticationService, JwtAuthenticationService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

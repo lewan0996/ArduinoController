@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ArduinoController.DataAccess.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20180826185706_Init")]
+    [Migration("20180901142448_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -99,6 +99,8 @@ namespace ArduinoController.DataAccess.Migrations
                     b.Property<string>("PhoneNumber");
 
                     b.Property<bool>("PhoneNumberConfirmed");
+
+                    b.Property<string>("RefreshToken");
 
                     b.Property<string>("SecurityStamp");
 
