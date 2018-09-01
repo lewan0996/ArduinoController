@@ -25,10 +25,16 @@ namespace ArduinoController.DataAccess
             modelBuilder.Entity<WaitCommand>();
 
             modelBuilder.Entity<Procedure>().HasKey(p => new { p.UserId, p.Name });
+
             modelBuilder.Entity<ApplicationUser>()
                 .HasMany(u => u.Procedures)
                 .WithOne()
                 .HasForeignKey(p => p.UserId);
+
+            modelBuilder.Entity<ApplicationUser>()
+                .HasMany(u => u.Devices)
+                .WithOne();
+
             modelBuilder.Entity<ArduinoDevice>().HasKey(d => d.MacAddress);
         }
     }

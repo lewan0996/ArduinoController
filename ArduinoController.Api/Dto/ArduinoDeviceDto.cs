@@ -2,11 +2,11 @@
 
 namespace ArduinoController.Api.Dto
 {
-    public class RefreshTokenDto
+    public class ArduinoDeviceDto
     {
         [Required]
-        public string Token { get; set; }
+        public string MacAddress { get; set; }
         [Required]
-        public string RefreshToken { get; set; }
+        public string Name { get; set; }
     }
 }

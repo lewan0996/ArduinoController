@@ -57,9 +57,9 @@ namespace ArduinoController.Api.Auth
             var jwt = new JwtSecurityToken(
                 jwtConfig["Issuer"],
                 jwtConfig["Audience"],
-                notBefore: DateTime.Now,
+                notBefore: DateTime.UtcNow,
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(int.Parse(jwtConfig["MinutesToExpire"])),
+                expires: DateTime.UtcNow.AddMinutes(int.Parse(jwtConfig["MinutesToExpire"])),
                 signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256));
 
             return new JwtSecurityTokenHandler().WriteToken(jwt);

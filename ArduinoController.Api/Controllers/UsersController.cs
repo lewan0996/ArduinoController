@@ -1,11 +1,10 @@
-﻿using System.Net;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using System.Threading.Tasks;
 using ArduinoController.Api.Auth;
 using ArduinoController.Api.Dto;
 using ArduinoController.Core.Contract.DataAccess;
 using ArduinoController.DataAccess;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -55,6 +54,11 @@ namespace ArduinoController.Api.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody]AuthDto dto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             if (dto == null)
             {
                 return BadRequest();
@@ -88,6 +92,11 @@ namespace ArduinoController.Api.Controllers
         [HttpPost("refresh")]
         public async Task<IActionResult> Refresh([FromBody]RefreshTokenDto dto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             (string Token, string RefreshToken) newTokens;
             var uow = _unitOfWork.Create();
 
