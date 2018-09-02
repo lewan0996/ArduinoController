@@ -6,7 +6,7 @@ namespace ArduinoController.Core.Contract.DataAccess
     {
         T Add(T entity);
         void Delete(T entity);
-        T Get(int id);
+        T Get(params object[] id);
         IQueryable<T> GetAll();
     }
 }

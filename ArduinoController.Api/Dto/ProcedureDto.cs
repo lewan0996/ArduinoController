@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using ArduinoController.Api.Dto.Commands;
+using ArduinoController.Core.Models;
 
 namespace ArduinoController.Api.Dto
 {
@@ -7,7 +10,18 @@ namespace ArduinoController.Api.Dto
     {
         [Required]
         public string Name { get; set; }
-        public string DeviceMacAddress { get; set; }
-        public IEnumerable<ushort> CommandIds { get; set; }
+        public ArduinoDeviceDto Device { get; set; }
+        public IEnumerable<CommandDto> Commands { get; set; }
+
+        public Procedure MapToProcedure(string userId)
+        {
+            return new Procedure
+            {
+                Name = Name,
+                UserId = userId,
+                Device = Device.MapToArduinoDevice(),
+                Commands = Commands.Select(c => c.MapToCommand()).ToArray()
+            };
+        }
     }
 }

@@ -74,7 +74,8 @@ namespace ArduinoController.DataAccess.Migrations
                 columns: table => new
                 {
                     MacAddress = table.Column<string>(nullable: false),
-                    ApplicationUserId = table.Column<string>(nullable: true)
+                    Name = table.Column<string>(nullable: true),
+                    ApplicationUserId = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -84,7 +85,7 @@ namespace ArduinoController.DataAccess.Migrations
                         column: x => x.ApplicationUserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -177,11 +178,18 @@ namespace ArduinoController.DataAccess.Migrations
                 columns: table => new
                 {
                     Name = table.Column<string>(nullable: false),
-                    UserId = table.Column<string>(nullable: false)
+                    UserId = table.Column<string>(nullable: false),
+                    DeviceMacAddress = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Procedures", x => new { x.UserId, x.Name });
+                    table.ForeignKey(
+                        name: "FK_Procedures_ArduinoDevice_DeviceMacAddress",
+                        column: x => x.DeviceMacAddress,
+                        principalTable: "ArduinoDevice",
+                        principalColumn: "MacAddress",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Procedures_AspNetUsers_UserId",
                         column: x => x.UserId,
@@ -265,13 +273,15 @@ namespace ArduinoController.DataAccess.Migrations
                 name: "IX_Commands_ProcedureUserId_ProcedureName",
                 table: "Commands",
                 columns: new[] { "ProcedureUserId", "ProcedureName" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Procedures_DeviceMacAddress",
+                table: "Procedures",
+                column: "DeviceMacAddress");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "ArduinoDevice");
-
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -295,6 +305,9 @@ namespace ArduinoController.DataAccess.Migrations
 
             migrationBuilder.DropTable(
                 name: "Procedures");
+
+            migrationBuilder.DropTable(
+                name: "ArduinoDevice");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

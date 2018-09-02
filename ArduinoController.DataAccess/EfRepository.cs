@@ -7,7 +7,8 @@ namespace ArduinoController.DataAccess
     public class EfRepository<T> : IRepository<T> where T: class
     {
         private readonly DbSet<T> _set;
-        public EfRepository(DbContext context)
+        // ReSharper disable once SuggestBaseTypeForParameter
+        public EfRepository(AppDbContext context)
         {
             _set = context.Set<T>();
         }
@@ -21,7 +22,7 @@ namespace ArduinoController.DataAccess
             _set.Remove(entity);
         }
 
-        public T Get(int id)
+        public T Get(params object[] id)
         {
             return _set.Find(id);
         }

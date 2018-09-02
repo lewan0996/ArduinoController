@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using ArduinoController.Core.Models;
 
 namespace ArduinoController.Api.Dto
 {
@@ -8,5 +9,14 @@ namespace ArduinoController.Api.Dto
         public string MacAddress { get; set; }
         [Required]
         public string Name { get; set; }
+
+        public ArduinoDevice MapToArduinoDevice()
+        {
+            return new ArduinoDevice
+            {
+                MacAddress = MacAddress,
+                Name = Name
+            };
+        }
     }
 }

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ArduinoController.DataAccess.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20180901142448_Init")]
+    [Migration("20180902152411_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,7 +26,10 @@ namespace ArduinoController.DataAccess.Migrations
                     b.Property<string>("MacAddress")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("ApplicationUserId");
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired();
+
+                    b.Property<string>("Name");
 
                     b.HasKey("MacAddress");
 
@@ -64,7 +67,11 @@ namespace ArduinoController.DataAccess.Migrations
 
                     b.Property<string>("Name");
 
+                    b.Property<string>("DeviceMacAddress");
+
                     b.HasKey("UserId", "Name");
+
+                    b.HasIndex("DeviceMacAddress");
 
                     b.ToTable("Procedures");
                 });
@@ -287,7 +294,8 @@ namespace ArduinoController.DataAccess.Migrations
                 {
                     b.HasOne("ArduinoController.DataAccess.ApplicationUser")
                         .WithMany("Devices")
-                        .HasForeignKey("ApplicationUserId");
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("ArduinoController.Core.Models.Commands.Command", b =>
@@ -299,6 +307,10 @@ namespace ArduinoController.DataAccess.Migrations
 
             modelBuilder.Entity("ArduinoController.Core.Models.Procedure", b =>
                 {
+                    b.HasOne("ArduinoController.Core.Models.ArduinoDevice", "Device")
+                        .WithMany()
+                        .HasForeignKey("DeviceMacAddress");
+
                     b.HasOne("ArduinoController.DataAccess.ApplicationUser")
                         .WithMany("Procedures")
                         .HasForeignKey("UserId")

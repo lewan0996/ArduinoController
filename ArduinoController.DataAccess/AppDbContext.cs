@@ -33,6 +33,7 @@ namespace ArduinoController.DataAccess
             modelBuilder.Entity<ApplicationUser>()
                 .HasMany(u => u.Procedures)
                 .WithOne()
+                .HasForeignKey(p=>p.UserId)
                 .IsRequired();
 
             modelBuilder.Entity<ApplicationUser>()

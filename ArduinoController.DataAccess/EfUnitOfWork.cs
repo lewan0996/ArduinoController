@@ -24,14 +24,14 @@ namespace ArduinoController.DataAccess
 
             if (_shouldRollback)
             {
-                _transaction.Rollback();
+                _transaction?.Rollback();
             }
             else
             {
                 _transaction.Commit();
             }
 
-            _transaction.Dispose();
+            _transaction?.Dispose();
             _context.Dispose();
 
             _disposed = true;
