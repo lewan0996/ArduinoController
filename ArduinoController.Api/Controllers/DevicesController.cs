@@ -13,7 +13,7 @@ namespace ArduinoController.Api.Controllers
     [Produces("application/json")]
     [Route("api/Devices")]
     [Authorize]
-    public class DevicesController : Controller
+    public class DevicesController : Controller // todo: move logic to service
     {
         private readonly IRepository<ArduinoDevice> _devicesRepository;
         private readonly UserManager<ApplicationUser> _userManager;
@@ -27,25 +27,27 @@ namespace ArduinoController.Api.Controllers
             _userManager = userManager;
         }
 
-        [HttpPost("Add")]
-        public async Task<IActionResult> Add([FromBody] ArduinoDeviceDto dto)
+        [HttpPost]
+        public IActionResult Add([FromBody] ArduinoDeviceDto dto)
         {
             if (dto == null)
             {
                 return BadRequest();
             }
 
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var device = dto.MapToArduinoDevice(User.Identity.Name);
             using (var uow = _unitOfWork.Create())
             {
-                var user = await _userManager.GetUserAsync(User);
-                var device = new ArduinoDevice { MacAddress = dto.MacAddress, Name = dto.Name };
-
-                user.Devices.Add(device);
-
+                _devicesRepository.Add(device);
                 uow.Commit();
             }
 
-            return NoContent();
+            return Ok(device);
         }
 
         [HttpDelete("{macAddress}")]
@@ -72,10 +74,10 @@ namespace ArduinoController.Api.Controllers
             return NoContent();
         }
 
-        [HttpPut("{macAddress}/ChangeName")]
-        public async Task<IActionResult> ChangeName(string macAddress, [FromBody]ArduinoDeviceDto dto)
+        [HttpPut("{id}")] //todo: move to service
+        public IActionResult Update(int id, [FromBody]ArduinoDeviceDto dto)
         {
-            if (macAddress == null || dto == null)
+            if (dto == null || id == 0)
             {
                 return BadRequest();
             }
@@ -85,8 +87,7 @@ namespace ArduinoController.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = await _userManager.GetUserAsync(User);
-            var device = user.Devices.FirstOrDefault(d => d.MacAddress == macAddress);
+            var device = _devicesRepository.Get(id);
 
             if (device == null)
             {
@@ -96,6 +97,7 @@ namespace ArduinoController.Api.Controllers
             using (var uow = _unitOfWork.Create())
             {
                 device.Name = dto.Name;
+                device.MacAddress = dto.MacAddress;
                 uow.Commit();
             }
 
@@ -103,10 +105,11 @@ namespace ArduinoController.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllUserDevices()
+        public IActionResult GetAllUserDevices()
         {
-            var user = await _userManager.GetUserAsync(User);
-            var devices = user.Devices;
+            var devices = _devicesRepository.GetAll()
+                .Where(d => d.UserId == User.Identity.Name)
+                .Select(d => new ArduinoDeviceDto { MacAddress = d.MacAddress, Name = d.Name });
 
             return Ok(devices);
         }

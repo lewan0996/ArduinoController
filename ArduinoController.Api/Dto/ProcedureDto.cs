@@ -19,8 +19,8 @@ namespace ArduinoController.Api.Dto
             {
                 Name = Name,
                 UserId = userId,
-                Device = Device.MapToArduinoDevice(),
-                Commands = Commands.Select(c => c.MapToCommand()).ToArray()
+                Device = Device?.MapToArduinoDevice(userId),
+                Commands = Commands?.Select(c => c.MapToCommand()).ToArray()
             };
         }
     }

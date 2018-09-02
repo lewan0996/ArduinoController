@@ -10,12 +10,13 @@ namespace ArduinoController.Api.Dto
         [Required]
         public string Name { get; set; }
 
-        public ArduinoDevice MapToArduinoDevice()
+        public ArduinoDevice MapToArduinoDevice(string userId)
         {
             return new ArduinoDevice
             {
                 MacAddress = MacAddress,
-                Name = Name
+                Name = Name,
+                UserId = userId
             };
         }
     }

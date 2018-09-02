@@ -32,7 +32,7 @@ namespace ArduinoController.Api.Auth
         public async Task<(string Token, string RefreshToken)> Refresh(string token, string refreshToken)
         {
             var principal = GetPrincipalFromExpiredToken(token);
-            var email = principal.Identity.Name;
+            var email = principal.FindFirstValue(ClaimTypes.Email);
 
             var savedRefreshToken = await GetRefreshTokenAsync(email);
 

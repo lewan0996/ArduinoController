@@ -73,16 +73,18 @@ namespace ArduinoController.DataAccess.Migrations
                 name: "ArduinoDevice",
                 columns: table => new
                 {
-                    MacAddress = table.Column<string>(nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    MacAddress = table.Column<string>(nullable: true),
                     Name = table.Column<string>(nullable: true),
-                    ApplicationUserId = table.Column<string>(nullable: false)
+                    UserId = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ArduinoDevice", x => x.MacAddress);
+                    table.PrimaryKey("PK_ArduinoDevice", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ArduinoDevice_AspNetUsers_ApplicationUserId",
-                        column: x => x.ApplicationUserId,
+                        name: "FK_ArduinoDevice_AspNetUsers_UserId",
+                        column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -177,18 +179,20 @@ namespace ArduinoController.DataAccess.Migrations
                 name: "Procedures",
                 columns: table => new
                 {
-                    Name = table.Column<string>(nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(nullable: true),
                     UserId = table.Column<string>(nullable: false),
-                    DeviceMacAddress = table.Column<string>(nullable: true)
+                    DeviceId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Procedures", x => new { x.UserId, x.Name });
+                    table.PrimaryKey("PK_Procedures", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Procedures_ArduinoDevice_DeviceMacAddress",
-                        column: x => x.DeviceMacAddress,
+                        name: "FK_Procedures_ArduinoDevice_DeviceId",
+                        column: x => x.DeviceId,
                         principalTable: "ArduinoDevice",
-                        principalColumn: "MacAddress",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Procedures_AspNetUsers_UserId",
@@ -205,8 +209,7 @@ namespace ArduinoController.DataAccess.Migrations
                     Id = table.Column<int>(nullable: false),
                     Order = table.Column<int>(nullable: false),
                     Discriminator = table.Column<string>(nullable: false),
-                    ProcedureName = table.Column<string>(nullable: true),
-                    ProcedureUserId = table.Column<string>(nullable: true),
+                    ProcedureId = table.Column<int>(nullable: true),
                     PinNumber = table.Column<byte>(nullable: true),
                     Value = table.Column<byte>(nullable: true),
                     DigitalWriteCommand_PinNumber = table.Column<byte>(nullable: true),
@@ -218,17 +221,17 @@ namespace ArduinoController.DataAccess.Migrations
                 {
                     table.PrimaryKey("PK_Commands", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Commands_Procedures_ProcedureUserId_ProcedureName",
-                        columns: x => new { x.ProcedureUserId, x.ProcedureName },
+                        name: "FK_Commands_Procedures_ProcedureId",
+                        column: x => x.ProcedureId,
                         principalTable: "Procedures",
-                        principalColumns: new[] { "UserId", "Name" },
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_ArduinoDevice_ApplicationUserId",
+                name: "IX_ArduinoDevice_UserId",
                 table: "ArduinoDevice",
-                column: "ApplicationUserId");
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -270,14 +273,19 @@ namespace ArduinoController.DataAccess.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Commands_ProcedureUserId_ProcedureName",
+                name: "IX_Commands_ProcedureId",
                 table: "Commands",
-                columns: new[] { "ProcedureUserId", "ProcedureName" });
+                column: "ProcedureId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Procedures_DeviceMacAddress",
+                name: "IX_Procedures_DeviceId",
                 table: "Procedures",
-                column: "DeviceMacAddress");
+                column: "DeviceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Procedures_UserId",
+                table: "Procedures",
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

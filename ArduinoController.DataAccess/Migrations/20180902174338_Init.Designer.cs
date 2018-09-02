@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ArduinoController.DataAccess.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20180902152411_Init")]
+    [Migration("20180902174338_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,17 +23,20 @@ namespace ArduinoController.DataAccess.Migrations
 
             modelBuilder.Entity("ArduinoController.Core.Models.ArduinoDevice", b =>
                 {
-                    b.Property<string>("MacAddress")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ApplicationUserId")
-                        .IsRequired();
+                    b.Property<string>("MacAddress");
 
                     b.Property<string>("Name");
 
-                    b.HasKey("MacAddress");
+                    b.Property<string>("UserId")
+                        .IsRequired();
 
-                    b.HasIndex("ApplicationUserId");
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("ArduinoDevice");
                 });
@@ -48,13 +51,11 @@ namespace ArduinoController.DataAccess.Migrations
 
                     b.Property<int>("Order");
 
-                    b.Property<string>("ProcedureName");
-
-                    b.Property<string>("ProcedureUserId");
+                    b.Property<int?>("ProcedureId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProcedureUserId", "ProcedureName");
+                    b.HasIndex("ProcedureId");
 
                     b.ToTable("Commands");
 
@@ -63,15 +64,22 @@ namespace ArduinoController.DataAccess.Migrations
 
             modelBuilder.Entity("ArduinoController.Core.Models.Procedure", b =>
                 {
-                    b.Property<string>("UserId");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("DeviceId");
 
                     b.Property<string>("Name");
 
-                    b.Property<string>("DeviceMacAddress");
+                    b.Property<string>("UserId")
+                        .IsRequired();
 
-                    b.HasKey("UserId", "Name");
+                    b.HasKey("Id");
 
-                    b.HasIndex("DeviceMacAddress");
+                    b.HasIndex("DeviceId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Procedures");
                 });
@@ -294,7 +302,7 @@ namespace ArduinoController.DataAccess.Migrations
                 {
                     b.HasOne("ArduinoController.DataAccess.ApplicationUser")
                         .WithMany("Devices")
-                        .HasForeignKey("ApplicationUserId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -302,14 +310,14 @@ namespace ArduinoController.DataAccess.Migrations
                 {
                     b.HasOne("ArduinoController.Core.Models.Procedure")
                         .WithMany("Commands")
-                        .HasForeignKey("ProcedureUserId", "ProcedureName");
+                        .HasForeignKey("ProcedureId");
                 });
 
             modelBuilder.Entity("ArduinoController.Core.Models.Procedure", b =>
                 {
                     b.HasOne("ArduinoController.Core.Models.ArduinoDevice", "Device")
                         .WithMany()
-                        .HasForeignKey("DeviceMacAddress");
+                        .HasForeignKey("DeviceId");
 
                     b.HasOne("ArduinoController.DataAccess.ApplicationUser")
                         .WithMany("Procedures")

@@ -24,7 +24,7 @@ namespace ArduinoController.DataAccess
             modelBuilder.Entity<NegateCommand>();
             modelBuilder.Entity<WaitCommand>();
 
-            modelBuilder.Entity<Procedure>().HasKey(p => new { p.UserId, p.Name });
+            modelBuilder.Entity<Procedure>().HasKey(p => p.Id);
 
             modelBuilder.Entity<Procedure>()
                 .HasOne(p => p.Device)
@@ -33,15 +33,16 @@ namespace ArduinoController.DataAccess
             modelBuilder.Entity<ApplicationUser>()
                 .HasMany(u => u.Procedures)
                 .WithOne()
-                .HasForeignKey(p=>p.UserId)
+                .HasForeignKey(p => p.UserId)
                 .IsRequired();
 
             modelBuilder.Entity<ApplicationUser>()
                 .HasMany(u => u.Devices)
                 .WithOne()
+                .HasForeignKey(d => d.UserId)
                 .IsRequired();
 
-            modelBuilder.Entity<ArduinoDevice>().HasKey(d => d.MacAddress);
+            modelBuilder.Entity<ArduinoDevice>().HasKey(d => d.Id);
         }
     }
 }

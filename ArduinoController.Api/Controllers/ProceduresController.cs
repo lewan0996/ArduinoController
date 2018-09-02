@@ -1,12 +1,16 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using ArduinoController.Api.Dto;
 using ArduinoController.Core.Contract.DataAccess;
 using ArduinoController.Core.Contract.Services;
+using ArduinoController.Core.Exceptions;
 using ArduinoController.Core.Models;
 using ArduinoController.DataAccess;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ArduinoController.Api.Controllers
 {
@@ -46,8 +50,19 @@ namespace ArduinoController.Api.Controllers
 
             using (var uow = _unitOfWork.Create())
             {
-                _procedureService.Add(procedure);
-                uow.Commit();
+                try
+                {
+                    _procedureService.Add(procedure);
+                    uow.Commit();
+                }
+                catch (DbUpdateException)
+                {
+                    return new StatusCodeResult(StatusCodes.Status409Conflict);
+                }
+                catch (RecordNotFoundException ex)
+                {
+                    return NotFound(ex.Message);
+                }
             }
 
             return Ok(procedure);

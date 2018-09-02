@@ -81,7 +81,12 @@ namespace ArduinoController.Api.Controllers
             using (var uow = _unitOfWork.Create())
             {
                 refreshToken = await _authenticationService.GenerateAndSaveRefreshTokenAsync(dto.Email);
-                token = _authenticationService.GenerateToken(new[] { new Claim(ClaimTypes.Name, dto.Email) });
+                token = _authenticationService.GenerateToken(new[]
+                {
+                    new Claim(ClaimTypes.Email, dto.Email),
+                    new Claim(ClaimTypes.NameIdentifier, user.Id),
+                    new Claim(ClaimTypes.Name, user.Id)
+                });
 
                 uow.Commit();
             }

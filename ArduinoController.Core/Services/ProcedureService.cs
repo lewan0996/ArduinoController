@@ -29,22 +29,19 @@ namespace ArduinoController.Core.Services
                 throw new ArgumentNullException();
             }
 
+            // ReSharper disable once InvertIf
+            if (procedure.Device != null)
+            {
+                var device = _devicesRepository.Get(procedure.Device.Id);
+                procedure.Device = device ?? throw new RecordNotFoundException("There is no such Arduino device");
+            }
+
             return _proceduresRepository.Add(procedure);
         }
 
-        public void Delete(string userId, string name)
+        public void Delete(int id)
         {
-            if (userId == null)
-            {
-                throw new ArgumentNullException(nameof(userId));
-            }
-
-            if (name == null)
-            {
-                throw new ArgumentNullException(nameof(name));
-            }
-
-            var toDelete = _proceduresRepository.Get(new { userId, name });
+            var toDelete = _proceduresRepository.Get(id);
 
             if (toDelete == null)
             {
@@ -54,19 +51,24 @@ namespace ArduinoController.Core.Services
             _proceduresRepository.Delete(toDelete);
         }
 
-        public Procedure Update(Procedure newProcedure)
+        public Procedure Update(int id, Procedure newProcedure)
         {
             if (newProcedure == null)
             {
                 throw new ArgumentNullException(nameof(newProcedure));
             }
 
-            var toUpdate = _proceduresRepository.Get(new { newProcedure.UserId, newProcedure.Name });
+            var toUpdate = _proceduresRepository.Get(id);
+
+            if (toUpdate == null)
+            {
+                throw new RecordNotFoundException();
+            }
 
             toUpdate.Name = newProcedure.Name;
-            toUpdate.Device = newProcedure.Device?.MacAddress == null
+            toUpdate.Device = newProcedure.Device == null
                 ? null
-                : _devicesRepository.Get(newProcedure.Device.MacAddress);
+                : _devicesRepository.Get(newProcedure.Device.Id);
 
             foreach (var command in toUpdate.Commands.ToArray())
             {
