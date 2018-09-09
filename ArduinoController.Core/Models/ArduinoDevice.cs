@@ -1,6 +1,8 @@
-﻿namespace ArduinoController.Core.Models
+﻿using ArduinoController.Core.Contract.Auth;
+
+namespace ArduinoController.Core.Models
 {
-    public class ArduinoDevice
+    public class ArduinoDevice : IOwnedResource
     {
         public int Id { get; set; }
         public string MacAddress { get; set; }

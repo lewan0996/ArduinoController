@@ -10,7 +10,7 @@ namespace ArduinoController.Api.Dto
         [Required]
         public string Name { get; set; }
 
-        public ArduinoDevice MapToArduinoDevice(string userId)
+        public ArduinoDevice MapToArduinoDevice(string userId = null) // if userId is irrelevant for the operation, it can be omitted
         {
             return new ArduinoDevice
             {

@@ -22,7 +22,7 @@ namespace ArduinoController.Core.Services
             _proceduresRepository = proceduresRepository;
         }
 
-        public Procedure Add(Procedure procedure)
+        public void Add(Procedure procedure)
         {
             if (procedure == null)
             {
@@ -36,7 +36,7 @@ namespace ArduinoController.Core.Services
                 procedure.Device = device ?? throw new RecordNotFoundException("There is no such Arduino device");
             }
 
-            return _proceduresRepository.Add(procedure);
+            _proceduresRepository.Add(procedure);
         }
 
         public void Delete(int id)
@@ -51,7 +51,7 @@ namespace ArduinoController.Core.Services
             _proceduresRepository.Delete(toDelete);
         }
 
-        public Procedure Update(int id, Procedure newProcedure)
+        public void Update(int id, Procedure newProcedure)
         {
             if (newProcedure == null)
             {
@@ -79,8 +79,6 @@ namespace ArduinoController.Core.Services
             {
                 toUpdate.Commands.Add(command);
             }
-
-            return toUpdate;
         }
     }
 }

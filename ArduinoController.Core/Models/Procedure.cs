@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
+using ArduinoController.Core.Contract.Auth;
 using ArduinoController.Core.Models.Commands;
 
 namespace ArduinoController.Core.Models
 {
-    public class Procedure
+    public class Procedure : IOwnedResource
     {
         public int Id { get; set; }
         public string Name { get; set; }

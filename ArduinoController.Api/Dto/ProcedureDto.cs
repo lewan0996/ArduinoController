@@ -13,7 +13,7 @@ namespace ArduinoController.Api.Dto
         public ArduinoDeviceDto Device { get; set; }
         public IEnumerable<CommandDto> Commands { get; set; }
 
-        public Procedure MapToProcedure(string userId)
+        public Procedure MapToProcedure(string userId = null) // if userId is irrelevant for the operation, it can be omitted
         {
             return new Procedure
             {

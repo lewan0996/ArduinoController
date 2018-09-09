@@ -1,6 +1,6 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using ArduinoController.Api.Dto;
+using ArduinoController.Core.Contract.Auth;
 using ArduinoController.Core.Contract.DataAccess;
 using ArduinoController.Core.Contract.Services;
 using ArduinoController.Core.Exceptions;
@@ -22,13 +22,16 @@ namespace ArduinoController.Api.Controllers
         private readonly IProcedureService _procedureService;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IAuthorizationService<Procedure> _authorizationService;
 
-        public ProceduresController(IRepository<Procedure> proceduresRepository, IUnitOfWork unitOfWork,
-            UserManager<ApplicationUser> userManager, IProcedureService procedureService)
+        public ProceduresController(IUnitOfWork unitOfWork,
+            UserManager<ApplicationUser> userManager, IProcedureService procedureService,
+            IAuthorizationService<Procedure> authorizationService)
         {
             _unitOfWork = unitOfWork;
             _userManager = userManager;
             _procedureService = procedureService;
+            _authorizationService = authorizationService;
         }
 
         [HttpPost]
@@ -66,6 +69,77 @@ namespace ArduinoController.Api.Controllers
             }
 
             return Ok(procedure);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            if (id == 0)
+            {
+                return BadRequest();
+            }
+
+            var authorizationResult = await _authorizationService.Authorize(User, id);
+
+            if (!authorizationResult)
+            {
+                return Forbid();
+            }
+
+            using (var uow = _unitOfWork.Create())
+            {
+                try
+                {
+                    _procedureService.Delete(id);
+                }
+                catch (RecordNotFoundException)
+                {
+                    return NotFound();
+                }
+
+                uow.Commit();
+            }
+
+            return NoContent();
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, [FromBody] ProcedureDto dto)
+        {
+            if (id == 0 || dto == null)
+            {
+                return BadRequest();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var authorizationResult = await _authorizationService.Authorize(User, id);
+
+            if (!authorizationResult)
+            {
+                return Forbid();
+            }
+
+            var newProcedure = dto.MapToProcedure();
+
+            using (var uow = _unitOfWork.Create())
+            {
+                try
+                {
+                    _procedureService.Update(id, newProcedure);
+                }
+                catch (RecordNotFoundException)
+                {
+                    return NotFound();
+                }
+
+                uow.Commit();
+            }
+
+            return NoContent();
         }
     }
 }
