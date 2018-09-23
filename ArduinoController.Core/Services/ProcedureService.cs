@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using ArduinoController.Core.Contract.DataAccess;
 using ArduinoController.Core.Contract.Services;
@@ -58,7 +59,8 @@ namespace ArduinoController.Core.Services
                 throw new ArgumentNullException(nameof(newProcedure));
             }
 
-            var toUpdate = _proceduresRepository.Get(id);
+            var toUpdate = _proceduresRepository.GetAll(p => p.Commands)
+                .FirstOrDefault(p => p.Id == id);
 
             if (toUpdate == null)
             {
@@ -70,15 +72,26 @@ namespace ArduinoController.Core.Services
                 ? null
                 : _devicesRepository.Get(newProcedure.Device.Id);
 
-            foreach (var command in toUpdate.Commands.ToArray())
+            foreach (var command in toUpdate.Commands?.ToArray() ?? new Command[] { })
             {
                 _commandsRepository.Delete(command);
+            }
+
+            if (toUpdate.Commands == null)
+            {
+                toUpdate.Commands = new List<Command>();
             }
 
             foreach (var command in newProcedure.Commands?.ToArray() ?? new Command[] { })
             {
                 toUpdate.Commands.Add(command);
             }
+        }
+
+        public IQueryable<Procedure> GetUserProcedures(string userId)
+        {
+            return _proceduresRepository.GetAll(p => p.Device, p => p.Commands)
+                .Where(p => p.UserId == userId);
         }
     }
 }

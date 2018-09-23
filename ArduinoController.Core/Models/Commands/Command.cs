@@ -2,7 +2,7 @@
 {
     public abstract class Command
     {
-        public ushort Id { get; set; }
-        public ushort Order { get; set; }
+        public short Id { get; set; }
+        public short Order { get; set; }
     }
 }

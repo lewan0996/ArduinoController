@@ -1,13 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using ArduinoController.Core.Models.Commands;
+using Newtonsoft.Json;
 
 namespace ArduinoController.Api.Dto.Commands
 {
+    [JsonConverter(typeof(CommandDtoJsonConverter))]
     public abstract class CommandDto
     {
-        public ushort Id { get; set; }
+        public string Type { get; set; }
+        public short Id { get; set; }
         [Required]
-        public ushort Order { get; set; }
+        public short Order { get; set; }
 
         public abstract Command MapToCommand();
     }

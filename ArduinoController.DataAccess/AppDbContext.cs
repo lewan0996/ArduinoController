@@ -2,6 +2,7 @@
 using ArduinoController.Core.Models.Commands;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+// ReSharper disable UnusedMember.Global
 
 namespace ArduinoController.DataAccess
 {
@@ -13,6 +14,7 @@ namespace ArduinoController.DataAccess
         }
         public DbSet<Procedure> Procedures { get; set; }
         public DbSet<Command> Commands { get; set; }
+        public DbSet<ArduinoDevice> ArduinoDevices { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -70,7 +70,7 @@ namespace ArduinoController.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ArduinoDevice",
+                name: "ArduinoDevices",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -81,9 +81,9 @@ namespace ArduinoController.DataAccess.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ArduinoDevice", x => x.Id);
+                    table.PrimaryKey("PK_ArduinoDevices", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ArduinoDevice_AspNetUsers_UserId",
+                        name: "FK_ArduinoDevices_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -189,9 +189,9 @@ namespace ArduinoController.DataAccess.Migrations
                 {
                     table.PrimaryKey("PK_Procedures", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Procedures_ArduinoDevice_DeviceId",
+                        name: "FK_Procedures_ArduinoDevices_DeviceId",
                         column: x => x.DeviceId,
-                        principalTable: "ArduinoDevice",
+                        principalTable: "ArduinoDevices",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -206,8 +206,9 @@ namespace ArduinoController.DataAccess.Migrations
                 name: "Commands",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false),
-                    Order = table.Column<int>(nullable: false),
+                    Id = table.Column<short>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Order = table.Column<short>(nullable: false),
                     Discriminator = table.Column<string>(nullable: false),
                     ProcedureId = table.Column<int>(nullable: true),
                     PinNumber = table.Column<byte>(nullable: true),
@@ -229,8 +230,8 @@ namespace ArduinoController.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_ArduinoDevice_UserId",
-                table: "ArduinoDevice",
+                name: "IX_ArduinoDevices_UserId",
+                table: "ArduinoDevices",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -315,7 +316,7 @@ namespace ArduinoController.DataAccess.Migrations
                 name: "Procedures");
 
             migrationBuilder.DropTable(
-                name: "ArduinoDevice");
+                name: "ArduinoDevices");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

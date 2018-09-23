@@ -76,13 +76,12 @@ namespace ArduinoController.Api.Controllers
                 try
                 {
                     _deviceService.Delete(id);
+                    uow.Commit();
                 }
                 catch (RecordNotFoundException)
                 {
                     return NotFound();
                 }
-
-                uow.Commit();
             }
 
             return NoContent();
@@ -115,13 +114,12 @@ namespace ArduinoController.Api.Controllers
                 try
                 {
                     _deviceService.Update(id, device);
+                    uow.Commit();
                 }
                 catch (RecordNotFoundException)
                 {
                     return NotFound();
                 }
-
-                uow.Commit();
             }
 
             return Ok(device);

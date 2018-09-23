@@ -10,7 +10,7 @@ namespace ArduinoController.Api.Dto
     {
         [Required]
         public string Name { get; set; }
-        public ArduinoDeviceDto Device { get; set; }
+        public int DeviceId { get; set; }
         public IEnumerable<CommandDto> Commands { get; set; }
 
         public Procedure MapToProcedure(string userId = null) // if userId is irrelevant for the operation, it can be omitted
@@ -19,7 +19,7 @@ namespace ArduinoController.Api.Dto
             {
                 Name = Name,
                 UserId = userId,
-                Device = Device?.MapToArduinoDevice(userId),
+                Device = new ArduinoDeviceDto { Id = DeviceId }.MapToArduinoDevice(userId),
                 Commands = Commands?.Select(c => c.MapToCommand()).ToArray()
             };
         }

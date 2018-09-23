@@ -36,18 +36,19 @@ namespace ArduinoController.DataAccess.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ArduinoDevice");
+                    b.ToTable("ArduinoDevices");
                 });
 
             modelBuilder.Entity("ArduinoController.Core.Models.Commands.Command", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<short>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Discriminator")
                         .IsRequired();
 
-                    b.Property<int>("Order");
+                    b.Property<short>("Order");
 
                     b.Property<int?>("ProcedureId");
 

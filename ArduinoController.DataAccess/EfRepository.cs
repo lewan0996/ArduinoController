@@ -1,10 +1,12 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Linq.Expressions;
 using ArduinoController.Core.Contract.DataAccess;
 using Microsoft.EntityFrameworkCore;
 
 namespace ArduinoController.DataAccess
 {
-    public class EfRepository<T> : IRepository<T> where T: class
+    public class EfRepository<T> : IRepository<T> where T : class
     {
         private readonly DbSet<T> _set;
         // ReSharper disable once SuggestBaseTypeForParameter
@@ -27,9 +29,17 @@ namespace ArduinoController.DataAccess
             return _set.Find(id);
         }
 
-        public IQueryable<T> GetAll()
+        public IQueryable<T> GetAll(params Expression<Func<T, object>>[] propertiesToLoad)
         {
-            return _set;
+            if (propertiesToLoad == null) return _set;
+            var result = _set.AsQueryable();
+            // ReSharper disable once LoopCanBeConvertedToQuery
+            foreach (var expression in propertiesToLoad)
+            {
+                result = result.Include(expression);
+            }
+
+            return result;
         }
     }
 }

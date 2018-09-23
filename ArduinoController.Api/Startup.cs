@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using System.Threading.Tasks;
 using ArduinoController.Api.Auth;
+using ArduinoController.Core.Contract.Auth;
 using ArduinoController.Core.Contract.DataAccess;
 using ArduinoController.Core.Contract.Services;
 using ArduinoController.Core.Services;
@@ -76,6 +77,8 @@ namespace ArduinoController.Api
             services.AddScoped<IUnitOfWork, EfUnitOfWork>();
             services.AddScoped<IAuthenticationService, JwtAuthenticationService>();
             services.AddScoped<IProcedureService, ProcedureService>();
+            services.AddScoped<IDeviceService, DeviceService>();
+            services.AddScoped(typeof(IAuthorizationService<>), typeof(AuthorizationService<>));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

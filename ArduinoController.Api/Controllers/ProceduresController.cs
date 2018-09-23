@@ -34,6 +34,13 @@ namespace ArduinoController.Api.Controllers
             _authorizationService = authorizationService;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Get()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            return Ok(_procedureService.GetUserProcedures(user.Id));
+        }
+
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] ProcedureDto dto)
         {
@@ -91,13 +98,12 @@ namespace ArduinoController.Api.Controllers
                 try
                 {
                     _procedureService.Delete(id);
+                    uow.Commit();
                 }
                 catch (RecordNotFoundException)
                 {
                     return NotFound();
                 }
-
-                uow.Commit();
             }
 
             return NoContent();
@@ -111,7 +117,7 @@ namespace ArduinoController.Api.Controllers
                 return BadRequest();
             }
 
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid) 
             {
                 return BadRequest(ModelState);
             }
@@ -130,13 +136,12 @@ namespace ArduinoController.Api.Controllers
                 try
                 {
                     _procedureService.Update(id, newProcedure);
+                    uow.Commit();
                 }
                 catch (RecordNotFoundException)
                 {
                     return NotFound();
                 }
-
-                uow.Commit();
             }
 
             return NoContent();

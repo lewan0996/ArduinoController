@@ -103,18 +103,17 @@ namespace ArduinoController.Api.Controllers
             }
 
             (string Token, string RefreshToken) newTokens;
-            var uow = _unitOfWork.Create();
-
-            try
+            using (var uow = _unitOfWork.Create())
             {
-                newTokens = await _authenticationService.Refresh(dto.Token, dto.RefreshToken);
-                uow.Commit();
-                uow.Dispose();
-            }
-            catch (SecurityTokenException ex)
-            {
-                uow.Dispose();
-                return BadRequest(ex.Message);
+                try
+                {
+                    newTokens = await _authenticationService.Refresh(dto.Token, dto.RefreshToken);
+                    uow.Commit();
+                }
+                catch (SecurityTokenException ex)
+                {
+                    return BadRequest(ex.Message);
+                }
             }
             
             return Ok(new { newTokens.Token, newTokens.RefreshToken });
