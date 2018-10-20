@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using ArduinoController.Core.Models;
 
 namespace ArduinoController.Core.Contract.Services
@@ -16,5 +17,7 @@ namespace ArduinoController.Core.Contract.Services
         void Update(int id, ArduinoDevice newDevice);
         /// <exception cref="System.ArgumentNullException">Thrown when given userId is null</exception>
         IQueryable<ArduinoDevice> GetAllUserDevices(string userId);
+
+        Task RegisterDeviceToIoTHub(ArduinoDevice device);
     }
 }

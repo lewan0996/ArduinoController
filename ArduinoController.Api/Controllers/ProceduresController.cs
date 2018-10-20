@@ -146,5 +146,16 @@ namespace ArduinoController.Api.Controllers
 
             return NoContent();
         }
+
+        [HttpPost("{id}/execute")]
+        public IActionResult Execute(int id)
+        {
+            if (id == 0)
+            {
+                return BadRequest();
+            }
+
+            return Ok();
+        }
     }
 }

@@ -1,19 +1,23 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using ArduinoController.Core.Contract.DataAccess;
 using ArduinoController.Core.Contract.Services;
 using ArduinoController.Core.Exceptions;
 using ArduinoController.Core.Models;
+using Microsoft.Azure.Devices;
 
 namespace ArduinoController.Core.Services
 {
     public class DeviceService : IDeviceService
     {
         private readonly IRepository<ArduinoDevice> _deviceRepository;
-        
-        public DeviceService(IRepository<ArduinoDevice> deviceRepository)
+        private readonly RegistryManager _registryManager;
+
+        public DeviceService(IRepository<ArduinoDevice> deviceRepository, string ioTHubConnectionString)
         {
             _deviceRepository = deviceRepository;
+            _registryManager = RegistryManager.CreateFromConnectionString(ioTHubConnectionString);
         }
         public void Add(ArduinoDevice device)
         {
@@ -74,6 +78,12 @@ namespace ArduinoController.Core.Services
 
             return _deviceRepository.GetAll()
                 .Where(d => d.UserId == userId);
+        }
+
+        public async Task RegisterDeviceToIoTHub(ArduinoDevice device)
+        {
+            var iotHubDevice = new Device(device.MacAddress);
+            await _registryManager.AddDeviceAsync(iotHubDevice);
         }
     }
 }

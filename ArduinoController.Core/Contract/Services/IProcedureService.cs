@@ -9,5 +9,6 @@ namespace ArduinoController.Core.Contract.Services
         void Delete(int id);
         void Update(int id, Procedure newProcedure);
         IQueryable<Procedure> GetUserProcedures(string userId);
+        void Execute(int id);
     }
 }

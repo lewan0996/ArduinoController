@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 
 namespace ArduinoController.Core.Contract.Auth
 {
+    // ReSharper disable once UnusedTypeParameter
     public interface IAuthorizationService<T> where T : IOwnedResource
     {
         /// <summary>

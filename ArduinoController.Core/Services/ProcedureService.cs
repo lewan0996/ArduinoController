@@ -93,5 +93,10 @@ namespace ArduinoController.Core.Services
             return _proceduresRepository.GetAll(p => p.Device, p => p.Commands)
                 .Where(p => p.UserId == userId);
         }
+
+        public void Execute(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

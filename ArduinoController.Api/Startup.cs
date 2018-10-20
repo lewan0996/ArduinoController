@@ -4,6 +4,7 @@ using ArduinoController.Api.Auth;
 using ArduinoController.Core.Contract.Auth;
 using ArduinoController.Core.Contract.DataAccess;
 using ArduinoController.Core.Contract.Services;
+using ArduinoController.Core.Models;
 using ArduinoController.Core.Services;
 using ArduinoController.DataAccess;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -77,7 +78,11 @@ namespace ArduinoController.Api
             services.AddScoped<IUnitOfWork, EfUnitOfWork>();
             services.AddScoped<IAuthenticationService, JwtAuthenticationService>();
             services.AddScoped<IProcedureService, ProcedureService>();
-            services.AddScoped<IDeviceService, DeviceService>();
+            services.AddScoped<IDeviceService>
+            (
+                p => new DeviceService(p.GetService<IRepository<ArduinoDevice>>(),
+                Configuration.GetConnectionString("IoTHub"))
+            );
             services.AddScoped(typeof(IAuthorizationService<>), typeof(AuthorizationService<>));
         }
 

@@ -49,6 +49,7 @@ namespace ArduinoController.Api.Controllers
             var device = dto.MapToArduinoDevice(user.Id);
             using (var uow = _unitOfWork.Create())
             {
+                await _deviceService.RegisterDeviceToIoTHub(device);
                 _deviceService.Add(device);
                 uow.Commit();
             }
