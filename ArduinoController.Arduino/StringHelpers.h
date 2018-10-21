@@ -6,7 +6,7 @@ class StringHelpers
 public:
 	StringHelpers();
 	~StringHelpers();
-	static std::vector<char*> Split(char* string, const char* delimeter);	
+	static std::vector<char*> split(char* string, const char* delimeter);	
 };
 
 struct CompareCStrings

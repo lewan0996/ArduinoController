@@ -1,27 +1,27 @@
 #include "Procedure.h"
 
-Procedure::Procedure(CommandFactory* command_factory)
+procedure::procedure(CommandFactory* command_factory)
 {
-	_commandFactory = command_factory;
+	command_factory_ = command_factory;
 }
 
-Procedure::~Procedure()
+procedure::~procedure()
 {
-	for (auto& command : Commands)
+	for (auto& command : commands)
 	{
 		delete command;
 	}
 }
 
-void Procedure::execute()
+void procedure::execute()
 {	
-	for (auto& command : Commands)
+	for (auto& command : commands)
 	{
-		command->Execute();
+		command->execute();
 	}	
 }
 
-void Procedure::load_json(const char * procedure_json)
+void procedure::load_json(const char * procedure_json)
 {
 	DynamicJsonBuffer json_buffer;
 
@@ -46,13 +46,13 @@ void Procedure::load_json(const char * procedure_json)
 			Serial.println("Procedure json is invalid - command name parse error");
 			return;
 		}
-		auto* args = new CommandArgs();
-		args->Duration = command_json["duration"];
-		args->Order = command_json["order"];
-		args->PinNumber = command_json["pinNumber"];
-		args->Value = command_json["value"];
+		auto* args = new command_args();
+		args->duration = command_json["duration"];
+		args->order = command_json["order"];
+		args->pin_number = command_json["pinNumber"];
+		args->value = command_json["value"];
 
-		auto command = _commandFactory->CreateCommand(command_name, args);
+		auto command = command_factory_->create_command(command_name, args);
 
 		if (command == nullptr)
 		{
@@ -60,9 +60,9 @@ void Procedure::load_json(const char * procedure_json)
 			return;
 		}
 				
-		Commands.push_back(command);
+		commands.push_back(command);
 	}
 
-	std::sort(Commands.begin(), Commands.end(), Command::Compare);
-	isValid = true;
+	std::sort(commands.begin(), commands.end(), command::compare);
+	is_valid = true;
 }

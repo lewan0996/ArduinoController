@@ -4,26 +4,24 @@ CommandFactory::CommandFactory()
 {
 	_commands.insert(
 		{		
-			{"DigitalWrite",[](CommandArgs* args)->Command* {return new DigitalWriteCommand(args); }},
-			{"AnalogWrite",[](CommandArgs* args)->Command* {return new AnalogWriteCommand(args); }},
-			{"Negate",[](CommandArgs* args)->Command* {return new NegateCommand(args); } },
-			{"Wait",[](CommandArgs* args)->Command* {return new WaitCommand(args); } }
+			{"DigitalWrite",[](command_args* args)->command* {return new DigitalWriteCommand(args); }},
+			{"AnalogWrite",[](command_args* args)->command* {return new AnalogWriteCommand(args); }},
+			{"Negate",[](command_args* args)->command* {return new NegateCommand(args); } },
+			{"Wait",[](command_args* args)->command* {return new WaitCommand(args); } }
 		}
 	);
 }
 
 
 CommandFactory::~CommandFactory()
-{
+= default;
 
-}
-
-Command* CommandFactory::CreateCommand(const char* commandName, CommandArgs* args)
+command* CommandFactory::create_command(const char* command_name, command_args* args)
 {
-	auto command = _commands[commandName];
+	const auto command = _commands[command_name];
 	if (!command)
 	{
-		return NULL;
+		return nullptr;
 	}
 	return (command)(args);	
 }

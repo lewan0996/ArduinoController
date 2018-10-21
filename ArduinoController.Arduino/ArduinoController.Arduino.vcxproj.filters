@@ -53,9 +53,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CommandArgs.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="CommandFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

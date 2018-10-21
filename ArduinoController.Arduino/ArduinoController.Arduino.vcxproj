@@ -136,7 +136,6 @@
     <ClInclude Include="__vm\.ArduinoController.Arduino.vsarduino.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CommandArgs.cpp" />
     <ClCompile Include="CommandFactory.cpp" />
     <ClCompile Include="Commands\AnalogWriteCommand.cpp" />
     <ClCompile Include="Commands\Command.cpp" />

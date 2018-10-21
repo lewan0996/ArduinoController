@@ -1,73 +1,74 @@
 #include "IoTHubClient.h"
 
-IoTHubClient* IoTHubClient::Instance;
+IoTHubClient* IoTHubClient::instance;
 
-IoTHubClient::IoTHubClient(String connectionString, std::pair<int, char*>(*handleDirectMethodCallback)(const char *methodName, const char *payload, size_t payloadSize))
+IoTHubClient::IoTHubClient(const String& connection_string, 
+	std::pair<int, char*>(*handle_direct_method_callback)
+	(const char *method_name, const char *payload, size_t payload_size))
 {
-	HandleDirectMethodCallback = handleDirectMethodCallback;
-	_connectionString = connectionString;
+	HandleDirectMethodCallback = handle_direct_method_callback;
+	_connectionString = connection_string;
 	Serial.println(_connectionString);
-	IoTHubClient::Instance = this; // solution to member function vs "normal" function pointer
+	instance = this; // solution to member function vs "normal" function pointer
 }
 
-int DeviceMethodCallback_NonMember(const char * methodName, const unsigned char * payload, size_t size, unsigned char ** response, size_t * response_size, void * userContextCallback)
+int device_method_callback_non_member(const char * method_name, const unsigned char * payload, size_t size, unsigned char ** response, size_t * response_size, void * user_context_callback)
 {
-	return IoTHubClient::Instance->DeviceMethodCallback(methodName, payload, size, response, response_size, userContextCallback);
+	return IoTHubClient::instance->device_method_callback(method_name, payload, size, response, response_size, user_context_callback);
 }
 
-void IoTHubClient::Initialize()
+void IoTHubClient::initialize()
 {
 	Serial.println("Initializing IoTHub client...");
-	InitTime();	
+	init_time();	
 	
 	_iotHubClientHandle = IoTHubClient_LL_CreateFromConnectionString(_connectionString.c_str(), MQTT_Protocol);
-	if (_iotHubClientHandle == NULL)
+	if (_iotHubClientHandle == nullptr)
 	{
 		Serial.println("Failed to initialize IoT Hub client");
 		return;
 	}
-	
-	IOTHUB_CLIENT_RESULT result = IoTHubClient_LL_SetDeviceMethodCallback(_iotHubClientHandle, DeviceMethodCallback_NonMember, NULL);
+
+	const IOTHUB_CLIENT_RESULT result = IoTHubClient_LL_SetDeviceMethodCallback(_iotHubClientHandle, device_method_callback_non_member, NULL);
 
 	Serial.println(result);
 	Serial.println("IoT hub initialized");
 }
 
-void IoTHubClient::DoWork()
+void IoTHubClient::do_work()
 {
 	IoTHubClient_LL_DoWork(_iotHubClientHandle);
 }
 
-int IoTHubClient::DeviceMethodCallback(const char * methodName, const unsigned char * payload, size_t payloadSize, unsigned char ** response, size_t * response_size, void * userContextCallback)
+int IoTHubClient::device_method_callback(const char * method_name, const unsigned char * payload, size_t payload_size, unsigned char ** response, size_t * response_size, void * user_context_callback)
 {
-	Serial.printf("Try to invoke method %s.\r\n", methodName);		
+	Serial.printf("Try to invoke method %s.\r\n", method_name);
 
-	std::pair<int, char*> result = HandleDirectMethodCallback(methodName, reinterpret_cast<const char*>(payload), payloadSize);
+	const std::pair<int, char*> result = HandleDirectMethodCallback(method_name, reinterpret_cast<const char*>(payload), payload_size);
 
 	*response_size = strlen(result.second);
-	*response = (unsigned char *)malloc(*response_size);
-	strncpy((char *)(*response), result.second, *response_size);
+	*response = static_cast<unsigned char *>(malloc(*response_size));
+	strncpy(reinterpret_cast<char *>(*response), result.second, *response_size);
 
 	return result.first;
 }
 
-void IoTHubClient::InitTime()
+void IoTHubClient::init_time()
 {
-	time_t epochTime;
 	configTime(0, 0, "pool.ntp.org", "time.nist.gov");
 
 	while (true)
 	{
-		epochTime = time(NULL);
+		const auto epoch_time = time(nullptr);
 
-		if (epochTime == 0)
+		if (epoch_time == 0)
 		{
 			Serial.println("Fetching NTP epoch time failed! Waiting 2 seconds to retry.");
 			delay(2000);
 		}
 		else
 		{
-			Serial.printf("Fetched NTP epoch time is: %lu.\r\n", epochTime);
+			Serial.printf("Fetched NTP epoch time is: %lu.\r\n", epoch_time);
 			break;
 		}
 	}

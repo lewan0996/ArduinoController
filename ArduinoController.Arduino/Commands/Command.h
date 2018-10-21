@@ -1,3 +1,4 @@
+#pragma once
 #include "../CommandArgs.h";
 #ifndef _COMMAND_h
 #define _COMMAND_h
@@ -7,12 +8,13 @@
 #else
 #include "WProgram.h"
 #endif
-class Command {
-public:	
-	Command(CommandArgs* args);
-	virtual void Execute() = 0;
-	unsigned short Order;
-	static bool Compare(Command* x, Command* y);
+class command {
+public:
+	virtual ~command() = default;
+	explicit command(command_args* args);
+	virtual void execute() = 0;
+	unsigned short order;
+	static bool compare(command* x, command* y);
 };
 #endif
 

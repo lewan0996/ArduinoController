@@ -10,12 +10,12 @@
 #endif
 
 class NegateCommand :
-	public Command
+	public command
 {
 public:	
-	NegateCommand(CommandArgs* args);
+	NegateCommand(command_args* args);
 	~NegateCommand();
-	void Execute();
+	void execute();
 private:
 	uint8_t _pinNumber;
 };

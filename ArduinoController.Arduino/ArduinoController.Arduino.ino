@@ -66,11 +66,11 @@ void loop()
 		is_access_point_initialization_done = true;
 		init_wifi();
 
-		iot_hub_client->Initialize();
+		iot_hub_client->initialize();
 	}
 	else if (is_access_point_initialization_done)
 	{
-		iot_hub_client->DoWork();
+		iot_hub_client->do_work();
 		delay(10);
 	}
 }
@@ -108,20 +108,20 @@ void init_wifi()
 
 bool handle_execute_procedure_call(const char* payload)
 {
-	auto procedure = new Procedure(command_factory);
+	auto procedure_to_call = new procedure(command_factory);
 	Serial.println("Parsing json...");
-	procedure->LoadJson(payload);
-	if (procedure->isValid)
+	procedure_to_call->load_json(payload);
+	if (procedure_to_call->is_valid)
 	{
 		Serial.println("Parsing done...");
 		Serial.println("Executing procedure...");
-		procedure->Execute();
+		procedure_to_call->execute();
 		Serial.println("Procedure executed");
 
-		delete procedure;
+		delete procedure_to_call;
 		return true;
 	}
-	delete procedure;
+	delete procedure_to_call;
 	return false;
 }
 

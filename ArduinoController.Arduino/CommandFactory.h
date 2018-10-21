@@ -23,9 +23,9 @@ class CommandFactory
 public:
 	CommandFactory();
 	~CommandFactory();
-	Command* CreateCommand(const char* commandName, CommandArgs* args);
+	command* create_command(const char* commandName, command_args* args);
 private:
-	std::map<const char*, std::function<Command*(CommandArgs* args)>, CompareCStrings> _commands;
+	std::map<const char*, std::function<command*(command_args* args)>, CompareCStrings> _commands;
 };
 
 #endif
