@@ -23,7 +23,7 @@ void IoTHubClient::Initialize()
 	_iotHubClientHandle = IoTHubClient_LL_CreateFromConnectionString(_connectionString.c_str(), MQTT_Protocol);
 	if (_iotHubClientHandle == NULL)
 	{
-		Serial.println("Failed to initalize IoT Hub client");
+		Serial.println("Failed to initialize IoT Hub client");
 		return;
 	}
 	

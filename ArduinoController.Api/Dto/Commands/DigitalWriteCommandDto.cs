@@ -10,6 +10,8 @@ namespace ArduinoController.Api.Dto.Commands
         [Required]
         public bool Value { get; set; }
 
+        public override string Type => "DigitalWrite";
+
         public override Command MapToCommand()
         {
             return new DigitalWriteCommand

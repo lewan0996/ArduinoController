@@ -8,6 +8,8 @@ namespace ArduinoController.Api.Dto.Commands
         [Required]
         public byte PinNumber { get; set; }
 
+        public override string Type => "Negate";
+
         public override Command MapToCommand()
         {
             return new NegateCommand

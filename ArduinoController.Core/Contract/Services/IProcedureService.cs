@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using ArduinoController.Core.Models;
 
 namespace ArduinoController.Core.Contract.Services
@@ -9,6 +10,7 @@ namespace ArduinoController.Core.Contract.Services
         void Delete(int id);
         void Update(int id, Procedure newProcedure);
         IQueryable<Procedure> GetUserProcedures(string userId);
-        void Execute(int id);
+        IQueryable<Procedure> GetAllProcedures();
+        Task ExecuteAsync(Procedure procedure);
     }
 }

@@ -1,60 +1,60 @@
 #include "Procedure.h"
 
-Procedure::Procedure(CommandFactory* commandFactory)
+Procedure::Procedure(CommandFactory* command_factory)
 {
-	_commandFactory = commandFactory;
+	_commandFactory = command_factory;
 }
 
 Procedure::~Procedure()
 {
-	for (int i = 0; i < Commands.size(); i++) 
+	for (auto& command : Commands)
 	{
-		delete Commands[i];
+		delete command;
 	}
 }
 
-void Procedure::Execute()
+void Procedure::execute()
 {	
-	for (int i=0; i< Commands.size();i++)
+	for (auto& command : Commands)
 	{
-		Commands[i]->Execute();
+		command->Execute();
 	}	
 }
 
-void Procedure::LoadJson(const char * procedureJson)
+void Procedure::load_json(const char * procedure_json)
 {
-	DynamicJsonBuffer jsonBuffer;
+	DynamicJsonBuffer json_buffer;
 
-	JsonObject& payload = jsonBuffer.parseObject(procedureJson);
+	auto& payload = json_buffer.parseObject(procedure_json);
 
-	JsonArray& commandsArray = payload["commands"];
+	JsonArray& commands_array = payload["commands"];
 
-	size_t commandsArraySize = commandsArray.size();
+	size_t commands_array_size = commands_array.size();
 
-	if (commandsArraySize == 0) 
+	if (commands_array_size == 0) 
 	{
 		Serial.println("Procedure json is invalid - array parse error");		
 		return;
 	}	
 
-	for (int i = 0; i < commandsArraySize; i++) 
+	for (auto i = 0; i < commands_array_size; i++) 
 	{
-		JsonObject& commandJson = commandsArray[i];
-		const char* commandName = commandJson["name"];
-		if (commandName == nullptr)
+		JsonObject& command_json = commands_array[i];
+		const char* command_name = command_json["type"];
+		if (command_name == nullptr)
 		{
 			Serial.println("Procedure json is invalid - command name parse error");
 			return;
 		}
-		CommandArgs* args = new CommandArgs();
-		args->Duration = commandJson["duration"];
-		args->Order = commandJson["order"];
-		args->PinNumber = commandJson["pinNumber"];
-		args->Value = commandJson["value"];	
+		auto* args = new CommandArgs();
+		args->Duration = command_json["duration"];
+		args->Order = command_json["order"];
+		args->PinNumber = command_json["pinNumber"];
+		args->Value = command_json["value"];
 
-		Command* command = _commandFactory->CreateCommand(commandName, args);
+		auto command = _commandFactory->CreateCommand(command_name, args);
 
-		if (command == NULL)
+		if (command == nullptr)
 		{
 			Serial.println("Procedure json is invalid - there is no such command");
 			return;

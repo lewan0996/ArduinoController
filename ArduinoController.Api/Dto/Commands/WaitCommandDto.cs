@@ -8,6 +8,8 @@ namespace ArduinoController.Api.Dto.Commands
         [Required]
         public int Duration { get; set; }
 
+        public override string Type => "Wait";
+
         public override Command MapToCommand()
         {
             return new WaitCommand

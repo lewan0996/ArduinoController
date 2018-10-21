@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using ArduinoController.Core.Contract.DataAccess;
 using ArduinoController.Core.Contract.Services;
@@ -31,7 +33,7 @@ namespace ArduinoController.Core.Services
 
         public void Delete(int id)
         {
-            if (id==0)
+            if (id == 0)
             {
                 throw new ArgumentException("Id cannot be 0", nameof(id));
             }
@@ -82,8 +84,51 @@ namespace ArduinoController.Core.Services
 
         public async Task RegisterDeviceToIoTHub(ArduinoDevice device)
         {
-            var iotHubDevice = new Device(device.MacAddress);
+            var iotHubDevice = new Device(device.MacAddress)
+            {
+                Authentication = new AuthenticationMechanism
+                {
+                    SymmetricKey = new SymmetricKey
+                    {
+                        PrimaryKey = GetSha1Hash(device.MacAddress).ToUpper(),
+                        SecondaryKey = GetMD5Hash(device.MacAddress).ToUpper()
+                    }
+                }
+            };
+
             await _registryManager.AddDeviceAsync(iotHubDevice);
+        }
+
+        private static string GetSha1Hash(string value)
+        {
+            var stringBuilder = new StringBuilder();
+
+            using (var hash = SHA1.Create())
+            {
+                var enc = Encoding.UTF8;
+                var result = hash.ComputeHash(enc.GetBytes(value));
+
+                foreach (var b in result)
+                    stringBuilder.Append(b.ToString("x2"));
+            }
+
+            return stringBuilder.ToString();
+        }
+
+        private static string GetMD5Hash(string value)
+        {
+            var stringBuilder = new StringBuilder();
+
+            using (var hash = MD5.Create())
+            {
+                var enc = Encoding.UTF8;
+                var result = hash.ComputeHash(enc.GetBytes(value));
+
+                foreach (var b in result)
+                    stringBuilder.Append(b.ToString("x2"));
+            }
+
+            return stringBuilder.ToString();
         }
     }
 }

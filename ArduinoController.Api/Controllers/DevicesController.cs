@@ -10,6 +10,7 @@ using ArduinoController.DataAccess;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.Devices.Common.Exceptions;
 
 namespace ArduinoController.Api.Controllers
 {
@@ -49,7 +50,15 @@ namespace ArduinoController.Api.Controllers
             var device = dto.MapToArduinoDevice(user.Id);
             using (var uow = _unitOfWork.Create())
             {
-                await _deviceService.RegisterDeviceToIoTHub(device);
+                try
+                {
+                    await _deviceService.RegisterDeviceToIoTHub(device);
+                }
+                catch (DeviceAlreadyExistsException)
+                {
+                    return StatusCode(409);
+                }
+                
                 _deviceService.Add(device);
                 uow.Commit();
             }

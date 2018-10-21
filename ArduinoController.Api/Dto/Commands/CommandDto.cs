@@ -7,11 +7,10 @@ namespace ArduinoController.Api.Dto.Commands
     [JsonConverter(typeof(CommandDtoJsonConverter))]
     public abstract class CommandDto
     {
-        public string Type { get; set; }
+        public abstract string Type { get; }
         public short Id { get; set; }
         [Required]
         public short Order { get; set; }
-
         public abstract Command MapToCommand();
     }
 }

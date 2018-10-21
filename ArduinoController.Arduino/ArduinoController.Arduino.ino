@@ -90,7 +90,7 @@ String generate_iot_hub_connection_string(const String& mac_address)
 void init_wifi()
 {
 	// ReSharper disable once StringLiteralTypo
-	const auto ssid = "dupsko";
+	const auto ssid = "iPhone (Marcin)";
 	// ReSharper disable once StringLiteralTypo
 	// ReSharper disable once CommentTypo
 	const auto pass = "dupsko123"; // do zmiany
@@ -108,7 +108,7 @@ void init_wifi()
 
 bool handle_execute_procedure_call(const char* payload)
 {
-	auto procedure = new Procedure(command_factory);	
+	auto procedure = new Procedure(command_factory);
 	Serial.println("Parsing json...");
 	procedure->LoadJson(payload);
 	if (procedure->isValid)
@@ -133,7 +133,7 @@ std::pair<int, char*> handle_direct_method_callback(const char* method_name, con
 	{
 		auto* payload_value = static_cast<char *>(malloc(payload_size + 1));
 		strncpy(payload_value, payload, payload_size);
-		payload_value[payload_size] = '\0';		
+		payload_value[payload_size] = '\0';
 
 		const bool result = handle_execute_procedure_call(payload_value);
 

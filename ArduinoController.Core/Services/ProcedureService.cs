@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using ArduinoController.Core.Contract.DataAccess;
 using ArduinoController.Core.Contract.Services;
 using ArduinoController.Core.Exceptions;
 using ArduinoController.Core.Models;
 using ArduinoController.Core.Models.Commands;
+using Microsoft.Azure.Devices;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace ArduinoController.Core.Services
 {
@@ -15,12 +19,16 @@ namespace ArduinoController.Core.Services
         private readonly IRepository<ArduinoDevice> _devicesRepository;
         private readonly IRepository<Procedure> _proceduresRepository;
 
+        private readonly ServiceClient _serviceClient;
+
         public ProcedureService(IRepository<Command> commandsRepository, IRepository<ArduinoDevice> devicesRepository,
-            IRepository<Procedure> proceduresRepository)
+            IRepository<Procedure> proceduresRepository, string iotHubConnectionString)
         {
             _commandsRepository = commandsRepository;
             _devicesRepository = devicesRepository;
             _proceduresRepository = proceduresRepository;
+
+            _serviceClient = ServiceClient.CreateFromConnectionString(iotHubConnectionString);
         }
 
         public void Add(Procedure procedure)
@@ -94,9 +102,28 @@ namespace ArduinoController.Core.Services
                 .Where(p => p.UserId == userId);
         }
 
-        public void Execute(int id)
+        public IQueryable<Procedure> GetAllProcedures()
         {
-            throw new NotImplementedException();
+            return _proceduresRepository.GetAll(p => p.Device, p => p.Commands);
+        }
+
+        public async Task ExecuteAsync(Procedure procedure)
+        {
+            var method = new CloudToDeviceMethod("ExecuteProcedure")
+            {
+                ResponseTimeout =
+                    TimeSpan.FromMilliseconds(procedure.Commands.OfType<WaitCommand>().Sum(c => c.Duration) + 30000)
+            };
+
+            method.SetPayloadJson(procedure.GenerateDeviceMethodPayload());
+
+            var response = await _serviceClient.InvokeDeviceMethodAsync(procedure.Device.MacAddress, method);
+
+            if (response.Status >= 400)
+            {
+                throw new CloudToDeviceMethodInvocationFailedException(
+                    $"Method invocation failed. Response payload: {response.GetPayloadAsJson()}");
+            }
         }
     }
 }

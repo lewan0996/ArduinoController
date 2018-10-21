@@ -7,6 +7,8 @@ namespace ArduinoController.Api.Dto.Commands
         public byte PinNumber { get; set; }
         public byte Value { get; set; }
 
+        public override string Type => "AnalogWrite";
+
         public override Command MapToCommand()
         {
             return new AnalogWriteCommand

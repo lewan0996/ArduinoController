@@ -21,6 +21,7 @@ namespace ArduinoController.DataAccess
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Command>().HasKey(c => c.Id);
+            modelBuilder.Entity<Command>().Ignore(c => c.Type);
             modelBuilder.Entity<AnalogWriteCommand>();
             modelBuilder.Entity<DigitalWriteCommand>();
             modelBuilder.Entity<NegateCommand>();
