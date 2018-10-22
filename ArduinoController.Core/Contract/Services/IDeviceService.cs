@@ -15,7 +15,7 @@ namespace ArduinoController.Core.Contract.Services
         /// <exception cref="System.ArgumentNullException">Thrown when given device is null</exception>
         /// <exception cref="Exceptions.RecordNotFoundException">Thrown when no record with given id exists</exception>
         void Update(int id, ArduinoDevice newDevice);
-        /// <exception cref="System.ArgumentNullException">Thrown when given userId is null</exception>
+        /// <exception cref="System.ArgumentNullException">Thrown when given  userId is null</exception>
         IQueryable<ArduinoDevice> GetAllUserDevices(string userId);
 
         Task RegisterDeviceToIoTHub(ArduinoDevice device);
