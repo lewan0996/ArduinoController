@@ -1,15 +1,14 @@
 #include "NegateCommand.h"
 
-NegateCommand::NegateCommand(CommandArgs* args) : Command(args)
+NegateCommand::NegateCommand(command_args* args) : command(args)
 {
-	_pinNumber = args->PinNumber;
+	_pinNumber = args->pin_number;
 }
 
 NegateCommand::~NegateCommand()
-{
-}
+= default;
 
-void NegateCommand::Execute()
+void NegateCommand::execute()
 {
 	Serial.print("Executing Negate");
 	Serial.print(" to pin ");	

@@ -1,7 +1,7 @@
 // Procedure.h
 
 #ifndef _PROCEDURE_h
-#define _PROCEDURE_h
+#define PROCEDURE_H
 
 #if defined(ARDUINO) && ARDUINO >= 100
 #include "arduino.h"
@@ -13,16 +13,16 @@
 #include "CommandFactory.h";
 #include <ArduinoJson.h>
 
-class Procedure {
+class procedure {
 public:
-	Procedure(CommandFactory* commandFactory);
-	~Procedure();
-	void Execute();
-	void LoadJson(const char* procedureJson);
-	std::vector<Command*> Commands;
-	bool isValid = false;
+	explicit procedure(CommandFactory* command_factory);
+	~procedure();
+	void execute();
+	void load_json(const char* procedure_json);
+	std::vector<command*> commands;
+	bool is_valid = false;
 private:
-	CommandFactory * _commandFactory;
+	CommandFactory * command_factory_;
 };
 
 #endif

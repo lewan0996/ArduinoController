@@ -16,16 +16,16 @@
 class IoTHubClient
 {
 public:
-	IoTHubClient(String connectionString, std::pair<int, char*>(*handleDirectMethodCallback)(const char* methodName, const char* payload, size_t payloadSize));
-	void Initialize();
-	void DoWork();
-	static IoTHubClient* Instance;
-	int DeviceMethodCallback(const char *methodName, const unsigned char *payload, size_t size, unsigned char **response, size_t *response_size, void *userContextCallback);
+	IoTHubClient(const String& connectionString, std::pair<int, char*>(*handleDirectMethodCallback)(const char* methodName, const char* payload, size_t payloadSize));
+	void initialize();
+	void do_work();
+	static IoTHubClient* instance;
+	int device_method_callback(const char *methodName, const unsigned char *payload, size_t size, unsigned char **response, size_t *response_size, void *userContextCallback);
 private:
-	IOTHUB_CLIENT_LL_HANDLE _iotHubClientHandle;
+	IOTHUB_CLIENT_LL_HANDLE _iotHubClientHandle{};
 	String _connectionString;
-	std::pair<int, char*>(*HandleDirectMethodCallback)(const char* methodName, const char* payload, size_t payloadSize);	
-	void InitTime();
+	std::pair<int, char*>(*HandleDirectMethodCallback)(const char* methodName, const char* payload, size_t payloadSize);
+	static void init_time();
 };
 
 #endif

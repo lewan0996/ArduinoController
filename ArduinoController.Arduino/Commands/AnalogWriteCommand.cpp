@@ -1,16 +1,15 @@
 #include "AnalogWriteCommand.h"
 
-AnalogWriteCommand::AnalogWriteCommand(CommandArgs* args) :Command(args)
+AnalogWriteCommand::AnalogWriteCommand(command_args* args) :command(args)
 {
-	_pinNumber = args->PinNumber;
-	_value = args->Value;
+	_pinNumber = args->pin_number;
+	_value = args->value;
 }
 
 AnalogWriteCommand::~AnalogWriteCommand()
-{
-}
+= default;
 
-void AnalogWriteCommand::Execute()
+void AnalogWriteCommand::execute()
 {
 	Serial.print("Executing analog write ");
 	Serial.print(_value);

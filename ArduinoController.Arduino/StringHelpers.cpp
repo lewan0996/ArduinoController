@@ -3,24 +3,21 @@
 
 
 StringHelpers::StringHelpers()
-{
-}
+= default;
 
 
 StringHelpers::~StringHelpers()
-{
-}
+= default;
 
-std::vector<char*> StringHelpers::Split(char* string, const char* delimeter)
+std::vector<char*> StringHelpers::split(char* string, const char* delimiter)
 {
 	std::vector<char*> result;
-	char* pch;
-	pch = strtok(string, delimeter);
+	auto pch = strtok(string, delimiter);
 
-	while (pch != NULL)
+	while (pch != nullptr)
 	{
 		result.push_back(pch);
-		pch = strtok(NULL, delimeter);
+		pch = strtok(nullptr, delimiter);
 	}
 
 	return result;

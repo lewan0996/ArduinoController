@@ -1,11 +1,11 @@
 #include "Command.h"
 
-Command::Command(CommandArgs* args)
+command::command(command_args* args)
 {
-	Order = args->Order;
+	order = args->order;
 }
 
-bool Command::Compare(Command * x, Command * y)
+bool command::compare(command * x, command * y)
 {
-	x->Order < y->Order;
+	return x->order < y->order;
 }

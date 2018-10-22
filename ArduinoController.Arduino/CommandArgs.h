@@ -6,15 +6,13 @@
 #else
 #include "WProgram.h"
 #endif
-class CommandArgs
+class command_args
 {
-public:
-	CommandArgs();
-	~CommandArgs();
-	uint8_t PinNumber;
-	uint8_t Value;
-	unsigned long Duration;
-	unsigned short Order;
+public:	
+	uint8_t pin_number;
+	uint8_t value;
+	unsigned long duration;
+	unsigned short order;
 };
 
 #endif

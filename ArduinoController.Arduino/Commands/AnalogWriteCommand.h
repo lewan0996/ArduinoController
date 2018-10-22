@@ -10,12 +10,12 @@
 #include "Command.h"
 
 class AnalogWriteCommand :
-	public Command
+	public command
 {
 public:	
-	AnalogWriteCommand(CommandArgs* args);
+	AnalogWriteCommand(command_args* args);
 	~AnalogWriteCommand();
-	void Execute();
+	void execute();
 	void SetPinNumber(uint8_t pinNumber);
 	void SetValue(uint8_t value);
 private:

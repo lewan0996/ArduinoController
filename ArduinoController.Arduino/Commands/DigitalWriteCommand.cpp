@@ -1,26 +1,25 @@
 #include "DigitalWriteCommand.h"
 
-DigitalWriteCommand::DigitalWriteCommand(CommandArgs* args) : Command(args)
+DigitalWriteCommand::DigitalWriteCommand(command_args* args) : command(args)
 {
-	_pinNumber = args->PinNumber;
-	_value = args->Value;
+	_pinNumber = args->pin_number;
+	_value = args->value;
 }
 
 DigitalWriteCommand::~DigitalWriteCommand()
+= default;
+
+void DigitalWriteCommand::set_pin_number(const uint8_t pin_number)
 {
+	_pinNumber = pin_number;
 }
 
-void DigitalWriteCommand::SetPinNumber(uint8_t pinNumber)
-{
-	_pinNumber = pinNumber;
-}
-
-void DigitalWriteCommand::SetValue(uint8_t value)
+void DigitalWriteCommand::set_value(const uint8_t value)
 {
 	_value = value;
 }
 
-void DigitalWriteCommand::Execute()
+void DigitalWriteCommand::execute()
 {
 	Serial.print("Executing digital write ");
 	Serial.print(_value);

@@ -7,41 +7,39 @@
 #include <Hash.h>
 #include "IoTHubClient.h"
 #include <ArduinoJson.hpp>
-#include <ArduinoJson.h>
 #include "ESP8266WiFi.h"
 #include "Procedure.h"
-#include "Command.h"
-#include "StringHelpers.h";
-#include "CommandFactory.h";
+#include "CommandFactory.h"
 
-int accessPointStartTime;
-int accessPointDuration = 10000;
+int access_point_start_time;
+unsigned long access_point_duration = 10000;
 
-bool isAccessPointInitializationDone;
-CommandFactory* commandFactory = new CommandFactory();
-IoTHubClient* ioTHubClient;
+bool is_access_point_initialization_done;
+CommandFactory* command_factory = new CommandFactory();
+IoTHubClient* iot_hub_client;
 
-std::pair<int, char*> HandleDirectMethodCallback(const char* methodName, const char* payload, size_t payloadSize);
-String GenerateIoTHubConnectionString(String macAddress);
+std::pair<int, char*> handle_direct_method_callback(const char* method_name, const char* payload, size_t payload_size);
+String generate_iot_hub_connection_string(const String& mac_address);
+void init_wifi();
 
 void setup()
 {
 	Serial.begin(9600);
 
-	String macAddress = WiFi.macAddress();
+	const auto mac_address = WiFi.macAddress();
 
-	String connectionString = GenerateIoTHubConnectionString(macAddress);
+	auto connection_string = generate_iot_hub_connection_string(mac_address);
 
-	Serial.println(connectionString);
+	Serial.println(connection_string);
 
-	ioTHubClient = new IoTHubClient(connectionString, HandleDirectMethodCallback);
+	iot_hub_client = new IoTHubClient(connection_string, handle_direct_method_callback);
 
-	String SSID = "ESP_" + macAddress;
-	Serial.println("Enabling access point with SSID: " + SSID);
-	bool accessPointEnabled = WiFi.softAP(SSID.c_str());
-	if (accessPointEnabled)
+	String ssid = "ESP_" + mac_address;
+	Serial.println("Enabling access point with SSID: " + ssid);
+	const auto access_point_enabled = WiFi.softAP(ssid.c_str());
+	if (access_point_enabled)
 	{
-		accessPointStartTime = millis();
+		access_point_start_time = millis();
 	}
 	else
 	{
@@ -51,12 +49,12 @@ void setup()
 
 void loop()
 {
-	if (!isAccessPointInitializationDone && millis() - accessPointStartTime > accessPointDuration)
+	if (!is_access_point_initialization_done && millis() - access_point_start_time > access_point_duration)
 	{
 		Serial.println("Disabling access point");
-		bool accessPointDisabled = WiFi.softAPdisconnect();
+		const auto access_point_disabled = WiFi.softAPdisconnect();
 
-		if (accessPointDisabled)
+		if (access_point_disabled)
 		{
 			Serial.println("Access point disabled");
 		}
@@ -65,34 +63,37 @@ void loop()
 			Serial.println("Disabling access point failed");
 		}
 
-		isAccessPointInitializationDone = true;
-		initWifi();
+		is_access_point_initialization_done = true;
+		init_wifi();
 
-		ioTHubClient->Initialize();
+		iot_hub_client->Initialize();
 	}
-	else if (isAccessPointInitializationDone)
+	else if (is_access_point_initialization_done)
 	{
-		ioTHubClient->DoWork();
+		iot_hub_client->DoWork();
 		delay(10);
 	}
 }
 
-String GenerateIoTHubConnectionString(String macAddress)
+String generate_iot_hub_connection_string(const String& mac_address)
 {
-	String result = "HostName=arduino-controller-iot-hub.azure-devices.net;DeviceId=ESP_";
-	result += macAddress;
+	String result = "HostName=arduino-controller-iot-hub.azure-devices.net;DeviceId=";
+	result += mac_address;
 	result += ";SharedAccessKey=";
-	String hash = sha1(macAddress);
+	auto hash = sha1(mac_address);
 	hash.toUpperCase();
 	result += hash;
 
 	return result;
 }
 
-void initWifi()
+void init_wifi()
 {
-	const char* ssid = "dupsko";
-	const char* pass = "dupsko123"; // do zmiany
+	// ReSharper disable once StringLiteralTypo
+	const auto ssid = "dupsko";
+	// ReSharper disable once StringLiteralTypo
+	// ReSharper disable once CommentTypo
+	const auto pass = "dupsko123"; // do zmiany
 
 	Serial.printf("Attempting to connect to SSID: %s.\r\n", ssid);
 
@@ -105,9 +106,9 @@ void initWifi()
 	Serial.printf("Connected to wifi %s.\r\n", ssid);
 }
 
-bool HandleExecuteProcedureCall(const char* payload)
+bool handle_execute_procedure_call(const char* payload)
 {
-	Procedure* procedure = new Procedure(commandFactory);	
+	auto procedure = new Procedure(command_factory);	
 	Serial.println("Parsing json...");
 	procedure->LoadJson(payload);
 	if (procedure->isValid)
@@ -120,41 +121,38 @@ bool HandleExecuteProcedureCall(const char* payload)
 		delete procedure;
 		return true;
 	}
-	else
-	{
-		delete procedure;
-		return false;
-	}
+	delete procedure;
+	return false;
 }
 
-std::pair<int, char*> HandleDirectMethodCallback(const char* methodName, const char* payload, size_t payloadSize)
+std::pair<int, char*> handle_direct_method_callback(const char* method_name, const char* payload, size_t payload_size)
 {
-	int statusCode;
-	char* responseMessage;
-	if (strcmp(methodName, "ExecuteProcedure") == 0)
+	int status_code;
+	char const* response_message;
+	if (strcmp(method_name, "ExecuteProcedure") == 0)
 	{
-		char* payloadValue = (char *)malloc(payloadSize + 1);
-		strncpy(payloadValue, payload, payloadSize);
-		payloadValue[payloadSize] = '\0';		
+		auto* payload_value = static_cast<char *>(malloc(payload_size + 1));
+		strncpy(payload_value, payload, payload_size);
+		payload_value[payload_size] = '\0';		
 
-		bool result = HandleExecuteProcedureCall(payloadValue);
+		const bool result = handle_execute_procedure_call(payload_value);
 
 		if (result)
 		{
-			statusCode = 200;
-			responseMessage = "\"Method executed successfully\"";
+			status_code = 200;
+			response_message = "\"Method executed successfully\"";
 		}
 		else
 		{
-			statusCode = 500;
-			responseMessage = "\"An error occured while invoking the method\"";
+			status_code = 500;
+			response_message = "\"An error occured while invoking the method\"";
 		}
 	}
 	else
 	{
-		statusCode = 404;
-		responseMessage = "\"There is no such method\"";
+		status_code = 404;
+		response_message = "\"There is no such method\"";
 	}
 
-	return std::pair<int, char*>(statusCode, responseMessage);
+	return { status_code, const_cast<char*>(response_message) };
 }

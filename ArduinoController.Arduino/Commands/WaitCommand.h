@@ -10,13 +10,13 @@
 #endif
 
 class WaitCommand :
-	public Command
+	public command
 {
 public:	
-	WaitCommand(CommandArgs* args);
+	WaitCommand(command_args* args);
 	~WaitCommand();
-	void SetDuration(unsigned long duration);
-	void Execute();
+	void set_duration(unsigned long duration);
+	void execute();
 private:
 	unsigned long _duration;
 };

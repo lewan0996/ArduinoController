@@ -9,14 +9,14 @@
 #endif
 
 class DigitalWriteCommand :
-	public Command
+	public command
 {
 public:	
-	DigitalWriteCommand(CommandArgs* args);
+	DigitalWriteCommand(command_args* args);
 	~DigitalWriteCommand();
-	void SetPinNumber(uint8_t pinNumber);
-	void SetValue(uint8_t value);
-	void Execute();
+	void set_pin_number(uint8_t pinNumber);
+	void set_value(uint8_t value);
+	void execute();
 private:
 	uint8_t _pinNumber;
 	uint8_t _value;
