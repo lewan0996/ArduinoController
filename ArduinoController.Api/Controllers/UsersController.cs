@@ -4,7 +4,6 @@ using ArduinoController.Api.Auth;
 using ArduinoController.Api.Dto;
 using ArduinoController.Core.Contract.DataAccess;
 using ArduinoController.DataAccess;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
