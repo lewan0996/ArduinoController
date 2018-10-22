@@ -46,6 +46,8 @@ namespace ArduinoController.DataAccess
                 .IsRequired();
 
             modelBuilder.Entity<ArduinoDevice>().HasKey(d => d.Id);
+
+            Database.Migrate();
         }
     }
 }
