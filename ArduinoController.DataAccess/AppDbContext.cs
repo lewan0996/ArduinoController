@@ -10,7 +10,7 @@ namespace ArduinoController.DataAccess
     {
         public AppDbContext(DbContextOptions options) : base(options)
         {
-
+            
         }
         public DbSet<Procedure> Procedures { get; set; }
         public DbSet<Command> Commands { get; set; }
@@ -46,8 +46,6 @@ namespace ArduinoController.DataAccess
                 .IsRequired();
 
             modelBuilder.Entity<ArduinoDevice>().HasKey(d => d.Id);
-
-            Database.Migrate();
         }
     }
 }
