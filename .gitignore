@@ -337,3 +337,4 @@ ASALocalRun/
 
 
 # End of https://www.gitignore.io/api/visualstudio
+ArduinoController\.Arduino/Debug/board\.buildinfo

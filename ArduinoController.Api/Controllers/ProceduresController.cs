@@ -181,7 +181,11 @@ namespace ArduinoController.Api.Controllers
             }
             catch (CloudToDeviceMethodInvocationFailedException)
             {
-                return StatusCode(500, "Failed to execute the procedure");
+                return StatusCode(500, "Connected to the device, but failed to execute the procedure");
+            }
+            catch (IotHubCommunicationException)
+            {
+                return StatusCode(500, "IoTHub communication error");
             }
 
             return NoContent();

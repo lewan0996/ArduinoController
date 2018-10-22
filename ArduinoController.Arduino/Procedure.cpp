@@ -8,7 +8,7 @@ procedure::procedure(CommandFactory* command_factory)
 procedure::~procedure()
 {
 	for (auto& command : commands)
-	{
+	{		
 		delete command;
 	}
 }

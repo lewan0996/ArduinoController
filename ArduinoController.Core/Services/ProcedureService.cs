@@ -8,8 +8,6 @@ using ArduinoController.Core.Exceptions;
 using ArduinoController.Core.Models;
 using ArduinoController.Core.Models.Commands;
 using Microsoft.Azure.Devices;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 namespace ArduinoController.Core.Services
 {

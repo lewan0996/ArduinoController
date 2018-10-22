@@ -116,8 +116,7 @@ bool handle_execute_procedure_call(const char* payload)
 		Serial.println("Parsing done...");
 		Serial.println("Executing procedure...");
 		procedure_to_call->execute();
-		Serial.println("Procedure executed");
-
+		Serial.println("Procedure executed");		
 		delete procedure_to_call;
 		return true;
 	}
