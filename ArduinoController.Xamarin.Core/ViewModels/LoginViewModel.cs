@@ -1,5 +1,7 @@
 ﻿using System.Threading.Tasks;
 using System.Windows.Input;
+using ArduinoController.Xamarin.Core.Exceptions;
+using ArduinoController.Xamarin.Core.Services.Abstractions;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
@@ -10,10 +12,14 @@ namespace ArduinoController.Xamarin.Core.ViewModels
     public class LoginViewModel : MvxViewModel
     {
         private readonly IMvxNavigationService _navigationService;
-        public LoginViewModel(IMvxNavigationService navigationService)
+        private readonly IApiService _apiService;
+
+        public LoginViewModel(IMvxNavigationService navigationService, IApiService apiService)
         {
             _navigationService = navigationService;
+            _apiService = apiService;
         }
+
         private string _email;
 
         public string Email
@@ -30,14 +36,22 @@ namespace ArduinoController.Xamarin.Core.ViewModels
             set => SetProperty(ref _password, value);
         }
 
-        private IMvxAsyncCommand _navigateToRegisterCommand;
+        private IMvxAsyncCommand _loginCommand;
 
-        public ICommand NavigateToRegisterCommand => _navigateToRegisterCommand =
-            _navigateToRegisterCommand ?? new MvxAsyncCommand(NavigateToRegister, () => true);
+        public ICommand LoginCommand => _loginCommand =
+            _loginCommand ?? new MvxAsyncCommand(Login, () => true);
 
-        private async Task NavigateToRegister()
+        private async Task Login()
         {
-            await _navigationService.Navigate<RegisterViewModel>();
+            try
+            {
+                var loginDto = await _apiService.Login(Email, Password);
+                await _navigationService.Navigate<MainViewModel>();
+            }
+            catch (UnsuccessfulStatusCodeException ex)
+            {
+                
+            }
         }
     }
 }

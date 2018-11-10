@@ -60,6 +60,7 @@
     <Compile Include="MainApplication.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Views\MainView.cs" />
     <Compile Include="Views\RegisterView.cs" />
     <Compile Include="Views\LoginView.cs" />
   </ItemGroup>
@@ -110,6 +111,11 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\LoginView.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\MainView.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>
