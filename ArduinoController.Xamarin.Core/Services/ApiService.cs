@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -87,8 +89,8 @@ namespace ArduinoController.Xamarin.Core.Services
                 {
                     throw new NotLoggedInException();
                 }
-                var token = _appSettings.GetValueOrDefault("token", "");
-                //odswierz token w razie potrzeby
+
+                var token = await GetToken();
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             }
 
@@ -120,6 +122,39 @@ namespace ArduinoController.Xamarin.Core.Services
             var responseBody = JsonConvert.DeserializeObject<TResponse>(responseContent);
 
             return responseBody;
+        }
+
+        private async Task<string> GetRefreshedTokenAsync(string token, string refreshToken)
+        {
+            var refreshResponse = await CallAsync<LoginDto>("users/refresh", "POST",
+                new LoginDto {Token = token, RefreshToken = refreshToken}, false);
+
+            _appSettings.AddOrUpdateValue("token", refreshResponse.Token);
+            _appSettings.AddOrUpdateValue("refreshToken", refreshResponse.RefreshToken);
+
+            return refreshResponse.Token;
+        }
+
+        private async Task<string> GetToken()
+        {
+            var savedToken = _appSettings.GetValueOrDefault("token", "");
+            var base64EncodedBytes = Convert.FromBase64String(savedToken);
+            var decodedToken = Encoding.UTF8.GetString(base64EncodedBytes);
+            var claimsPart = decodedToken
+                .SkipWhile(c => c != '.')
+                .TakeWhile(c => c != '.')
+                .ToString();
+            var claims = JsonConvert.DeserializeObject<Dictionary<string,string>>(claimsPart);
+
+            var expiryDate = DateTime.Parse(claims["exp"]);
+
+            if ((DateTime.Now - expiryDate).TotalMinutes > 1)
+            {
+                return savedToken;
+            }
+
+            var savedRefreshToken = _appSettings.GetValueOrDefault("refreshToken","");
+            return await GetRefreshedTokenAsync(savedToken, savedRefreshToken);
         }
     }
 }
