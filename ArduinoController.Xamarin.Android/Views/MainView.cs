@@ -15,9 +15,9 @@ namespace ArduinoController.Xamarin.Android.Views
             SetContentView(Resource.Layout.MainView);
         }
 
-        public override void OnBackPressed()
-        {
-            FinishAndRemoveTask();
-        }
+        //public override void OnBackPressed()
+        //{
+        //    FinishAndRemoveTask();
+        //}
     }
 }

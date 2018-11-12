@@ -41,6 +41,12 @@ namespace ArduinoController.Xamarin.Core.Services
             return result;
         }
 
+        public void Logout()
+        {
+            _appSettings.Remove("token");
+            _appSettings.Remove("refreshToken");
+        }
+
         public bool IsLoggedIn => _appSettings.Contains("token");
 
 
@@ -122,7 +128,7 @@ namespace ArduinoController.Xamarin.Core.Services
         private async Task<string> GetRefreshedTokenAsync(string token, string refreshToken)
         {
             var refreshResponse = await CallAsync<LoginDto>("users/refresh", "POST",
-                new { token, refreshToken }, false);
+                new LoginDto { Token = token, RefreshToken = refreshToken }, false);
 
             _appSettings.AddOrUpdateValue("token", refreshResponse.Token);
             _appSettings.AddOrUpdateValue("refreshToken", refreshResponse.RefreshToken);

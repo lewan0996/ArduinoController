@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using System.Windows.Input;
 using ArduinoController.Xamarin.Core.Dto;
+using ArduinoController.Xamarin.Core.Exceptions;
 using ArduinoController.Xamarin.Core.Services.Abstractions;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
@@ -22,7 +23,22 @@ namespace ArduinoController.Xamarin.Core.ViewModels
 
         private ICommand _navigateToDevicesCommand;
         public ICommand NavigateToDevicesCommand => _navigateToDevicesCommand =
-            _navigateToDevicesCommand ?? new MvxCommand(NavigateToDevices, () => true);
+            _navigateToDevicesCommand ?? new MvxAsyncCommand(NavigateToDevices, () => true);
+
+        private async Task NavigateToDevices()
+        {
+            await _navigationService.Navigate<DevicesViewModel>();
+        }
+
+        private ICommand _logoutCommand;
+        public ICommand LogoutCommand => _logoutCommand =
+            _logoutCommand ?? new MvxAsyncCommand(Logout, () => true);
+
+        private async Task Logout()
+        {
+            _apiService.Logout();
+            await _navigationService.Navigate<LoginViewModel>();
+        }
 
         private MvxObservableCollection<ProcedureListViewItemViewModel> _procedures;
         public MvxObservableCollection<ProcedureListViewItemViewModel> Procedures
@@ -31,35 +47,34 @@ namespace ArduinoController.Xamarin.Core.ViewModels
             set => SetProperty(ref _procedures, value);
         }
 
-        private void NavigateToDevices()
-        {
-            _navigationService.Navigate<DevicesViewModel>();
-        }
-
-        public override async Task Initialize()
-        {
-            await base.Initialize();
-
-            if (!_apiService.IsLoggedIn)
-            {
-                await _navigationService.Navigate<LoginViewModel>();
-            }
-        }
-
         public override void ViewAppearing()
         {
+            
             Task.Run(async () =>
             {
-                var procedures = await _apiService.CallAsync<ProcedureDto[]>("procedures", "GET");
-                Procedures = new MvxObservableCollection<ProcedureListViewItemViewModel>(
-                    procedures.Select(p =>
-                    {
-                        var procedureListViewItemViewModel =
-                            new ProcedureListViewItemViewModel(_apiService, p);
-                        procedureListViewItemViewModel.OnDeleted += (s, e) => { ViewAppearing(); };
+                if (!_apiService.IsLoggedIn)
+                {
+                    await _navigationService.Navigate<LoginViewModel>();
+                    return;
+                }
+                try
+                {
+                    var procedures = await _apiService.CallAsync<ProcedureDto[]>("procedures", "GET");
+                    Procedures = new MvxObservableCollection<ProcedureListViewItemViewModel>(
+                        procedures.Select(p =>
+                        {
+                            var procedureListViewItemViewModel =
+                                new ProcedureListViewItemViewModel(_apiService, p);
+                            procedureListViewItemViewModel.OnDeleted += (s, e) => { ViewAppearing(); };
 
-                        return procedureListViewItemViewModel;
-                    }));
+                            return procedureListViewItemViewModel;
+                        }));
+                }
+                catch (UnsuccessfulStatusCodeException ex)
+                {
+                    // error message
+                }
+
             });
         }
     }

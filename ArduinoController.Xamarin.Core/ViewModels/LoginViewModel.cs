@@ -58,17 +58,23 @@ namespace ArduinoController.Xamarin.Core.ViewModels
 
         private async Task Login()
         {
-            try
+            await Task.Run(async () =>
             {
-                IsLoading = true;
-                await _apiService.Login(Email, Password);
-                IsLoading = false;
-                await _navigationService.Navigate<MainViewModel>();
-            }
-            catch (UnsuccessfulStatusCodeException ex)
-            {
-                
-            }
+                try
+                {
+                    IsLoading = true;
+                    await _apiService.Login(Email, Password);
+                    await _navigationService.Close(this);
+                }
+                catch (UnsuccessfulStatusCodeException ex)
+                {
+
+                }
+                finally
+                {
+                    IsLoading = false;
+                }
+            });
         }
 
         private readonly IMvxAsyncCommand _registerCommand;
