@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -58,7 +59,7 @@ namespace ArduinoController.Api.Auth
                 jwtConfig["Issuer"],
                 jwtConfig["Audience"],
                 notBefore: DateTime.UtcNow,
-                claims: claims,
+                claims: claims.Where(c => c.Type != "iss" && c.Type != "aud"),
                 expires: DateTime.UtcNow.AddMinutes(int.Parse(jwtConfig["MinutesToExpire"])),
                 signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256));
 
