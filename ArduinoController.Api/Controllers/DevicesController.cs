@@ -58,7 +58,7 @@ namespace ArduinoController.Api.Controllers
                 {
                     return StatusCode(409);
                 }
-                
+
                 _deviceService.Add(device);
                 uow.Commit();
             }
@@ -116,7 +116,7 @@ namespace ArduinoController.Api.Controllers
             {
                 return Forbid();
             }
-            
+
             var device = dto.MapToArduinoDevice();
 
             using (var uow = _unitOfWork.Create())
@@ -140,7 +140,7 @@ namespace ArduinoController.Api.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
             var devices = _deviceService.GetAllUserDevices(user.Id)
-                .Select(d => new ArduinoDeviceDto { MacAddress = d.MacAddress, Name = d.Name });
+                .Select(d => new ArduinoDeviceDto { MacAddress = d.MacAddress, Name = d.Name, Id = d.Id });
 
             return Ok(devices);
         }
