@@ -4,23 +4,29 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-	<TextView
+	<TextView		
+		android:textSize="24"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		local:MvxBind="Text Name"/>
-	<TextView
+		local:MvxBind="Text Name"/>	
+	<TextView		
+		android:textSize="20"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		local:MvxBind="Text MacAddress"/>
-	<Button
-		android:text="Edit"
+	<LinearLayout
+		android:orientation="horizontal"
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		local:MvxBind="Click EditDeviceCommand"/>
-	<Button
-		android:text="Delete"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		local:MvxBind="Click DeleteDeviceCommand"/>
-	
+		android:layout_height="wrap_content">
+		<Button
+			android:text="Edit"
+			android:layout_height="match_parent"
+			android:layout_weight="1"
+			local:MvxBind="Click EditDeviceCommand"/>
+		<Button
+			android:text="Delete"
+			android:layout_height="match_parent"
+			android:layout_weight="1"
+			local:MvxBind="Click DeleteDeviceCommand"/>
+	</LinearLayout>
 </LinearLayout>

@@ -6,16 +6,14 @@
     android:layout_height="match_parent"	
 	>
 	<MvxListView
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
+		android:layout_width="match_parent"		
 		local:MvxItemTemplate="@layout/devicelistviewitem"
 		local:MvxBind="ItemsSource Devices"		
 		android:scrollIndicators="right"
-		 android:layout_weight="40"/>
+		android:layout_weight="8"/>
 	<Button
 		android:text="Add"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
+		android:layout_width="match_parent"		
 		local:MvxBind="Click AddDeviceCommand"
 		android:layout_weight="1" />
 </LinearLayout>
