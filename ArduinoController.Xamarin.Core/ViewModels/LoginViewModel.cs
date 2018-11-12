@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using System.Windows.Input;
-using ArduinoController.Xamarin.Core.Dto;
 using ArduinoController.Xamarin.Core.Exceptions;
 using ArduinoController.Xamarin.Core.Services.Abstractions;
 using MvvmCross.Commands;
@@ -19,6 +18,9 @@ namespace ArduinoController.Xamarin.Core.ViewModels
         {
             _navigationService = navigationService;
             _apiService = apiService;
+
+            _registerCommand = new MvxAsyncCommand(Register, () => !IsLoading);
+            _loginCommand = new MvxAsyncCommand(Login, () => !IsLoading);
         }
 
         private string _email;
@@ -42,13 +44,17 @@ namespace ArduinoController.Xamarin.Core.ViewModels
         public bool IsLoading
         {
             get => _isLoading;
-            set => SetProperty(ref _isLoading, value);
+            set
+            {
+                SetProperty(ref _isLoading, value);
+                _loginCommand.RaiseCanExecuteChanged();
+                _registerCommand.RaiseCanExecuteChanged();
+            }
         }
 
-        private IMvxAsyncCommand _loginCommand;
+        private readonly IMvxAsyncCommand _loginCommand;
 
-        public ICommand LoginCommand => _loginCommand =
-            _loginCommand ?? new MvxAsyncCommand(Login, () => !IsLoading);
+        public ICommand LoginCommand => _loginCommand;
 
         private async Task Login()
         {
@@ -65,10 +71,9 @@ namespace ArduinoController.Xamarin.Core.ViewModels
             }
         }
 
-        private IMvxAsyncCommand _registerCommand;
+        private readonly IMvxAsyncCommand _registerCommand;
 
-        public ICommand RegisterCommand => _registerCommand =
-            _registerCommand ?? new MvxAsyncCommand(Register, () => !IsLoading);
+        public ICommand RegisterCommand => _registerCommand;
 
         private async Task Register()
         {

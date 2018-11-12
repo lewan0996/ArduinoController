@@ -5,7 +5,7 @@ using MvvmCross.Platforms.Android.Views;
 
 namespace ArduinoController.Xamarin.Android.Views
 {
-    [Activity(Label="Arduino controller", MainLauncher = true)]
+    [Activity(Label="Arduino controller")]
     public class LoginView : MvxActivity<LoginViewModel>
     {
         protected override void OnCreate(Bundle bundle)

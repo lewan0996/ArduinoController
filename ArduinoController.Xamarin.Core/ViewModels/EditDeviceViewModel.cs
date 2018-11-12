@@ -62,9 +62,9 @@ namespace ArduinoController.Xamarin.Core.ViewModels
             {
                 // error message
             }
-            
-            
-            await _navigationService.Navigate<DevicesViewModel>();
+
+
+            await _navigationService.Close(this);
         }
 
         public override void Prepare(DeviceDto device)

@@ -1,8 +1,4 @@
-﻿using System.Net.Http;
-using ArduinoController.Xamarin.Core.Services;
-using ArduinoController.Xamarin.Core.Services.Abstractions;
-using ArduinoController.Xamarin.Core.ViewModels;
-using MvvmCross;
+﻿using ArduinoController.Xamarin.Core.ViewModels;
 using MvvmCross.IoC;
 using MvvmCross.ViewModels;
 
@@ -12,7 +8,7 @@ namespace ArduinoController.Xamarin.Core
     {
         public override void Initialize()
         {
-            RegisterAppStart<LoginViewModel>();
+            RegisterAppStart<MainViewModel>();
 
             CreatableTypes()
                 .EndingWith("Service")
