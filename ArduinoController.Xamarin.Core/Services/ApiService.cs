@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using ArduinoController.Xamarin.Core.Dto;
 using ArduinoController.Xamarin.Core.Exceptions;
@@ -17,7 +18,7 @@ namespace ArduinoController.Xamarin.Core.Services
     public class ApiService : IApiService
     {
         private readonly HttpClient _httpClient;
-        private readonly ISettings _appSettings; 
+        private readonly ISettings _appSettings;
 
         public ApiService()
         {
@@ -25,9 +26,14 @@ namespace ArduinoController.Xamarin.Core.Services
             _appSettings = CrossSettings.Current;
         }
 
+        public async Task CallAsync(string pathToResource, string httpMethod, object body = null, bool authorize = true)
+        {
+            await CallAsync<object>(pathToResource, httpMethod, body, authorize);
+        }
+
         public async Task<LoginDto> Login(string email, string password)
         {
-            var result = await CallAsync<LoginDto>("users/login", "POST", new {email, password}, false);
+            var result = await CallAsync<LoginDto>("users/login", "POST", new { email, password }, false);
 
             _appSettings.AddOrUpdateValue("token", result.Token);
             _appSettings.AddOrUpdateValue("refreshToken", result.RefreshToken);
@@ -35,53 +41,16 @@ namespace ArduinoController.Xamarin.Core.Services
             return result;
         }
 
-        //public void Logout()
-        //{
-        //    _appSettings.Remove("token");
-        //    _appSettings.Remove("refreshToken");
-        //}
-
-        //public async Task Register(string email, string password) // do poprawy - powtorzony kod
-        //{
-        //    var uri = new Uri(Url + "/register");
-        //    var body = new StringContent(JsonConvert.SerializeObject(new { email, password }), Encoding.UTF8,
-        //        "application/json");
-
-        //    var response = await _httpClient.PostAsync(uri, body);
-
-        //    if (!response.IsSuccessStatusCode)
-        //    {
-        //        throw new UnsuccessfulStatusCodeException(response.ReasonPhrase);
-        //    }
-        //}
-
-        //public async Task RefreshToken(string token, string refreshToken) // do poprawy - powtorzony kod
-        //{
-        //    var uri = new Uri(Url + "/refresh");
-        //    var body = new StringContent(JsonConvert.SerializeObject(new { token, refreshToken }), Encoding.UTF8,
-        //        "application/json");
-
-        //    var response = await _httpClient.PostAsync(uri, body);
-
-        //    if (!response.IsSuccessStatusCode)
-        //    {
-        //        throw new UnsuccessfulStatusCodeException(response.ReasonPhrase);
-        //    }
-
-        //    var result = JsonConvert.DeserializeObject<LoginDto>(await response.Content.ReadAsStringAsync());
-
-        //    _appSettings.AddOrUpdateValue("token", result.Token);
-        //    _appSettings.AddOrUpdateValue("refreshToken", result.RefreshToken);
-        //}
-
         public bool IsLoggedIn => _appSettings.Contains("token");
-        
 
-        public async Task<TResponse> CallAsync<TResponse>(string pathToResource, string httpMethod, object body,
+
+        public async Task<TResponse> CallAsync<TResponse>(string pathToResource, string httpMethod, object body = null,
             bool authorize = true)
         {
             var uri = new Uri(Configuration.ApiUrl + "/" + pathToResource);
-            var content = new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json");
+            var content = body != null
+                ? new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json")
+                : null;
 
             if (authorize)
             {
@@ -98,7 +67,13 @@ namespace ArduinoController.Xamarin.Core.Services
             switch (httpMethod)
             {
                 case "GET":
-                    response = await _httpClient.GetAsync(uri);
+                    var task = _httpClient.GetAsync(uri); // it crashes on await - don't know why
+                    while (!task.IsCompleted)
+                    {
+                        Thread.Sleep(100);
+                    }
+                    response = task.Result;
+                    //response = await _httpClient.GetAsync(uri);
                     break;
                 case "POST":
                     response = await _httpClient.PostAsync(uri, content);
@@ -127,7 +102,7 @@ namespace ArduinoController.Xamarin.Core.Services
         private async Task<string> GetRefreshedTokenAsync(string token, string refreshToken)
         {
             var refreshResponse = await CallAsync<LoginDto>("users/refresh", "POST",
-                new LoginDto {Token = token, RefreshToken = refreshToken}, false);
+                new LoginDto { Token = token, RefreshToken = refreshToken }, false);
 
             _appSettings.AddOrUpdateValue("token", refreshResponse.Token);
             _appSettings.AddOrUpdateValue("refreshToken", refreshResponse.RefreshToken);
@@ -138,22 +113,26 @@ namespace ArduinoController.Xamarin.Core.Services
         private async Task<string> GetToken()
         {
             var savedToken = _appSettings.GetValueOrDefault("token", "");
-            var base64EncodedBytes = Convert.FromBase64String(savedToken);
-            var decodedToken = Encoding.UTF8.GetString(base64EncodedBytes);
-            var claimsPart = decodedToken
-                .SkipWhile(c => c != '.')
-                .TakeWhile(c => c != '.')
-                .ToString();
-            var claims = JsonConvert.DeserializeObject<Dictionary<string,string>>(claimsPart);
 
-            var expiryDate = DateTime.Parse(claims["exp"]);
+            var claimsPart = new string(savedToken.SkipWhile(c => c != '.').Skip(1).TakeWhile(c => c != '.').ToArray());
 
-            if ((DateTime.Now - expiryDate).TotalMinutes > 1)
+            while (claimsPart.Length % 4 != 0)
+            {
+                claimsPart += "=";
+            }
+            var base64EncodedBytes = Convert.FromBase64String(claimsPart);
+            var decodedClaims = Encoding.UTF8.GetString(base64EncodedBytes);
+            var claims = JsonConvert.DeserializeObject<Dictionary<string, object>>(decodedClaims);
+
+            var unixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+            var expiryDate = unixEpoch.AddSeconds(Convert.ToDouble(claims["exp"]));
+
+            if ((expiryDate - DateTime.Now).TotalMinutes > 1)
             {
                 return savedToken;
             }
 
-            var savedRefreshToken = _appSettings.GetValueOrDefault("refreshToken","");
+            var savedRefreshToken = _appSettings.GetValueOrDefault("refreshToken", "");
             return await GetRefreshedTokenAsync(savedToken, savedRefreshToken);
         }
     }

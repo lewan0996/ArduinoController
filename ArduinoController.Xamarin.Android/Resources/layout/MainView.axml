@@ -4,12 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 	xmlns:local="http://schemas.android.com/apk/res-auto">
-	<TextView
-		android:text="MainView"
+	<!--<Mvx.MvxListView
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:id="@+id/textView1" 
-		local:MvxBind="Text Token"
+		android:layout_height="396.7dp"
+	/>-->
+	<Button
+		android:text="Manage devices"
+		android:layout_width="match_parent"
+		android:layout_height="55.3dp"
+		local:MvxBind="Click NavigateToDevicesCommand"
 	/>
-
 </LinearLayout>

@@ -1,23 +1,26 @@
-﻿using System.Threading.Tasks;
+﻿using System.Windows.Input;
+using MvvmCross.Commands;
+using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
-using Plugin.Settings;
 
 namespace ArduinoController.Xamarin.Core.ViewModels
 {
     public class MainViewModel : MvxViewModel
     {
-        private string _token;
+        private readonly IMvxNavigationService _navigationService;
+        private ICommand _navigateToDevicesCommand;
 
-        public string Token
+        public MainViewModel(IMvxNavigationService navigationService)
         {
-            get => _token;
-            set => SetProperty(ref _token, value);
+            _navigationService = navigationService;
         }
 
-        public override async Task Initialize()
+        public ICommand NavigateToDevicesCommand => _navigateToDevicesCommand =
+            _navigateToDevicesCommand ?? new MvxCommand(NavigateToDevices, () => true);
+
+        private void NavigateToDevices()
         {
-            await base.Initialize();
-            Token = CrossSettings.Current.GetValueOrDefault("token", "");
+            _navigationService.Navigate<DevicesViewModel>();
         }
     }
 }

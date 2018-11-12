@@ -60,6 +60,8 @@
     <Compile Include="MainApplication.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Views\DevicesView.cs" />
+    <Compile Include="Views\EditDeviceView.cs" />
     <Compile Include="Views\MainView.cs" />
     <Compile Include="Views\RegisterView.cs" />
     <Compile Include="Views\LoginView.cs" />
@@ -116,6 +118,21 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\MainView.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\DevicesView.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\EditDeviceView.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\DeviceListViewItem.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>

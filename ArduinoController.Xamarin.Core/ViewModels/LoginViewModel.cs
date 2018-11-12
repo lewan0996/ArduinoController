@@ -45,7 +45,7 @@ namespace ArduinoController.Xamarin.Core.ViewModels
         {
             try
             {
-                var loginDto = await _apiService.Login(Email, Password);
+                await _apiService.Login(Email, Password);
                 await _navigationService.Navigate<MainViewModel>();
             }
             catch (UnsuccessfulStatusCodeException ex)
