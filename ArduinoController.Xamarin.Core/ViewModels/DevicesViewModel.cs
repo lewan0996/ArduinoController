@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using ArduinoController.Xamarin.Core.Dto;
 using ArduinoController.Xamarin.Core.Services.Abstractions;
@@ -19,8 +20,8 @@ namespace ArduinoController.Xamarin.Core.ViewModels
             _navigationService = navigationService;
         }
 
-        private MvxObservableCollection<DeviceDto> _devices;
-        public MvxObservableCollection<DeviceDto> Devices
+        private MvxObservableCollection<DeviceListViewItemViewModel> _devices;
+        public MvxObservableCollection<DeviceListViewItemViewModel> Devices
         {
             get => _devices;
             set => SetProperty(ref _devices, value);
@@ -35,21 +36,20 @@ namespace ArduinoController.Xamarin.Core.ViewModels
             await _navigationService.Navigate<EditDeviceViewModel>();
         }
 
-        private IMvxAsyncCommand<DeviceDto> _deleteDeviceCommand;
-        public ICommand DeleteDeviceCommand => _deleteDeviceCommand =
-            _deleteDeviceCommand ?? new MvxAsyncCommand<DeviceDto>(DeleteDevice, _ => true);
-
-        private async Task DeleteDevice(DeviceDto device)
-        {
-            await _apiService.CallAsync($"device/{device.Id}", "DELETE");
-        }
-
         public override void ViewAppearing()
         {
             Task.Run(async () =>
             {
                 var devices = await _apiService.CallAsync<DeviceDto[]>("devices", "GET");
-                Devices = new MvxObservableCollection<DeviceDto>(devices);
+                Devices = new MvxObservableCollection<DeviceListViewItemViewModel>(
+                    devices.Select(d =>
+                    {
+                        var deviceListViewItemViewModel =
+                            new DeviceListViewItemViewModel(_navigationService, _apiService, d);
+                        deviceListViewItemViewModel.OnDeleted += (s, e) => { ViewAppearing(); };
+
+                        return deviceListViewItemViewModel;
+                    }));
             });
         }
     }

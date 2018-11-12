@@ -19,7 +19,7 @@
 		android:inputType="textPassword"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:hint="Password"		
+		android:hint="Password"
 		local:MvxBind="Text Password"
 	/>
 	<Button
@@ -31,7 +31,12 @@
 	<Button
 		android:text="Register"
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"						
+		android:layout_height="wrap_content"
+		local:MvxBind="Click RegisterCommand"
 	/>
+	<ProgressBar
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		local:MvxBind="Visibility Visibility(IsLoading)"/>
 	
 </LinearLayout>
