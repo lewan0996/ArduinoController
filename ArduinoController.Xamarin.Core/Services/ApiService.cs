@@ -64,10 +64,12 @@ namespace ArduinoController.Xamarin.Core.Services
             }
 
             HttpResponseMessage response;
+
+            Task<HttpResponseMessage> task;
             switch (httpMethod)
             {
                 case "GET":
-                    var task = _httpClient.GetAsync(uri); // it crashes on await - don't know why
+                    task = _httpClient.GetAsync(uri);
                     while (!task.IsCompleted)
                     {
                         Thread.Sleep(100);
@@ -76,13 +78,31 @@ namespace ArduinoController.Xamarin.Core.Services
                     //response = await _httpClient.GetAsync(uri);
                     break;
                 case "POST":
-                    response = await _httpClient.PostAsync(uri, content);
+                    task = _httpClient.PostAsync(uri, content);
+                    while (!task.IsCompleted)
+                    {
+                        Thread.Sleep(100);
+                    }
+                    response = task.Result;
+                    //response = await _httpClient.PostAsync(uri, content);
                     break;
                 case "PUT":
-                    response = await _httpClient.PutAsync(uri, content);
+                    task = _httpClient.PutAsync(uri, content); // it crashes on await - don't know why
+                    while (!task.IsCompleted)
+                    {
+                        Thread.Sleep(100);
+                    }
+                    response = task.Result;
+                    //response = await _httpClient.PutAsync(uri, content);
                     break;
                 case "DELETE":
-                    response = await _httpClient.DeleteAsync(uri);
+                    task = _httpClient.DeleteAsync(uri); // it crashes on await - don't know why
+                    while (!task.IsCompleted)
+                    {
+                        Thread.Sleep(100);
+                    }
+                    response = task.Result;
+                    //response = await _httpClient.DeleteAsync(uri);
                     break;
                 default:
                     throw new Exception("Unsupported http method");
@@ -102,7 +122,7 @@ namespace ArduinoController.Xamarin.Core.Services
         private async Task<string> GetRefreshedTokenAsync(string token, string refreshToken)
         {
             var refreshResponse = await CallAsync<LoginDto>("users/refresh", "POST",
-                new LoginDto { Token = token, RefreshToken = refreshToken }, false);
+                new { token, refreshToken }, false);
 
             _appSettings.AddOrUpdateValue("token", refreshResponse.Token);
             _appSettings.AddOrUpdateValue("refreshToken", refreshResponse.RefreshToken);

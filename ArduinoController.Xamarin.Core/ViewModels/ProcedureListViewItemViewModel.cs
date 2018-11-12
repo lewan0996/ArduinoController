@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using ArduinoController.Xamarin.Core.Dto;
+using ArduinoController.Xamarin.Core.Dto.Commands;
 using ArduinoController.Xamarin.Core.Services.Abstractions;
 using MvvmCross.Commands;
 using MvvmCross.ViewModels;
@@ -11,9 +13,12 @@ namespace ArduinoController.Xamarin.Core.ViewModels
     {
         private readonly IApiService _apiService;
 
-        public ProcedureListViewItemViewModel(IApiService apiService)
+        public ProcedureListViewItemViewModel(IApiService apiService, ProcedureDto procedureDto)
         {
             _apiService = apiService;
+            Id = procedureDto.Id;
+            Name = procedureDto.Name;
+            _commands = procedureDto.Commands;
         }
 
         private int _id;
@@ -30,6 +35,8 @@ namespace ArduinoController.Xamarin.Core.ViewModels
             get => _name;
             set => SetProperty(ref _name, value);
         }
+
+        private CommandDto[] _commands;
 
         private IMvxAsyncCommand _deleteProcedureCommand;
 
