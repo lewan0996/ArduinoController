@@ -16,7 +16,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_weight="1"
-		local:MvxBind="Click NavigateToDevicesCommand"
+		local:MvxBind="Click AddProcedureCommand"
 	/>
 	<Button
 		android:text="Manage devices"

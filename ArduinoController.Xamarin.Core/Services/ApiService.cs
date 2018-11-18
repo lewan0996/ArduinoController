@@ -4,7 +4,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using ArduinoController.Xamarin.Core.Dto;
 using ArduinoController.Xamarin.Core.Exceptions;
@@ -70,45 +69,21 @@ namespace ArduinoController.Xamarin.Core.Services
             }
 
             HttpResponseMessage response;
-
-            Task<HttpResponseMessage> task;
+            
             switch (httpMethod)
             {
                 case "GET":
-                    task = _httpClient.GetAsync(uri);
-                    while (!task.IsCompleted)
-                    {
-                        Thread.Sleep(100);
-                    }
-                    response = task.Result;
+                    response = _httpClient.GetAsync(uri).GetAwaiter().GetResult();
                     //response = await _httpClient.GetAsync(uri);
                     break;
                 case "POST":
-                    task = _httpClient.PostAsync(uri, content);
-                    while (!task.IsCompleted)
-                    {
-                        Thread.Sleep(100);
-                    }
-                    response = task.Result;
-                    //response = await _httpClient.PostAsync(uri, content);
+                    response= _httpClient.PostAsync(uri, content).GetAwaiter().GetResult();
                     break;
                 case "PUT":
-                    task = _httpClient.PutAsync(uri, content); // it crashes on await - don't know why
-                    while (!task.IsCompleted)
-                    {
-                        Thread.Sleep(100);
-                    }
-                    response = task.Result;
-                    //response = await _httpClient.PutAsync(uri, content);
+                    response = _httpClient.PutAsync(uri, content).GetAwaiter().GetResult(); // it crashes on await - don't know why
                     break;
                 case "DELETE":
-                    task = _httpClient.DeleteAsync(uri); // it crashes on await - don't know why
-                    while (!task.IsCompleted)
-                    {
-                        Thread.Sleep(100);
-                    }
-                    response = task.Result;
-                    //response = await _httpClient.DeleteAsync(uri);
+                    response = _httpClient.DeleteAsync(uri).GetAwaiter().GetResult(); // it crashes on await - don't know why
                     break;
                 default:
                     throw new Exception("Unsupported http method");
@@ -116,7 +91,11 @@ namespace ArduinoController.Xamarin.Core.Services
 
             if (!response.IsSuccessStatusCode)
             {
-                throw new UnsuccessfulStatusCodeException(response.ReasonPhrase);
+                throw new UnsuccessfulStatusCodeException(response
+                    .Content?
+                    .ReadAsStringAsync()
+                    .GetAwaiter()
+                    .GetResult(), response.StatusCode, response.ReasonPhrase);
             }
 
             var responseContent = await response.Content.ReadAsStringAsync();
@@ -153,7 +132,7 @@ namespace ArduinoController.Xamarin.Core.Services
             var unixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, 0);
             var expiryDate = unixEpoch.AddSeconds(Convert.ToDouble(claims["exp"]));
 
-            if ((expiryDate - DateTime.Now).TotalMinutes > 1)
+            if ((expiryDate - DateTime.UtcNow).TotalMinutes > 1)
             {
                 return savedToken;
             }

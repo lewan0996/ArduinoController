@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:local="http://schemas.android.com/apk/res-auto"
+	android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+	<EditText		
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:minWidth="25px"
+		android:minHeight="25px"
+		android:hint="Name"		
+		local:MvxBind="Text Name"
+	/>
+	<MvxSpinner
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		local:MvxItemTemplate="@layout/devicedropdownitem"
+		local:MvxDropDownItemTemplate="@layout/devicedropdownitem"
+		local:MvxBind="ItemsSource Devices; HandleItemSelected DeviceSelectedCommand"
+		 />
+	<Button
+		android:text="Add"
+		android:layout_width="match_parent"	
+		android:layout_height="wrap_content"
+		local:MvxBind="Click AddProcedureCommand"
+		/>
+</LinearLayout>

@@ -25,6 +25,15 @@ namespace ArduinoController.Xamarin.Core.ViewModels
         public ICommand NavigateToDevicesCommand => _navigateToDevicesCommand =
             _navigateToDevicesCommand ?? new MvxAsyncCommand(NavigateToDevices, () => true);
 
+        private async Task NavigateToEditProcedure()
+        {
+            await _navigationService.Navigate<EditProcedureViewModel>();
+        }
+
+        private ICommand _addProcedureCommand;
+        public ICommand AddProcedureCommand => _addProcedureCommand =
+            _addProcedureCommand ?? new MvxAsyncCommand(NavigateToEditProcedure, () => true);
+
         private async Task NavigateToDevices()
         {
             await _navigationService.Navigate<DevicesViewModel>();
@@ -74,7 +83,6 @@ namespace ArduinoController.Xamarin.Core.ViewModels
                 {
                     // error message
                 }
-
             });
         }
     }
