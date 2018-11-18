@@ -52,15 +52,15 @@ namespace ArduinoController.Api.Controllers
             {
                 try
                 {
-                    await _deviceService.RegisterDeviceToIoTHub(device);
+                    await _deviceService.AddAsync(device);
+                    uow.Commit();
                 }
                 catch (DeviceAlreadyExistsException)
                 {
                     return StatusCode(409);
                 }
 
-                _deviceService.Add(device);
-                uow.Commit();
+                
             }
 
             return Ok(device);
@@ -123,7 +123,7 @@ namespace ArduinoController.Api.Controllers
             {
                 try
                 {
-                    _deviceService.Update(id, device);
+                    await _deviceService.UpdateAsync(id, device);
                     uow.Commit();
                 }
                 catch (RecordNotFoundException)

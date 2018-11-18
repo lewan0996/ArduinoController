@@ -21,7 +21,7 @@ namespace ArduinoController.Core.Services
             _deviceRepository = deviceRepository;
             _registryManager = RegistryManager.CreateFromConnectionString(ioTHubConnectionString);
         }
-        public void Add(ArduinoDevice device)
+        public async Task AddAsync(ArduinoDevice device)
         {
             if (device == null)
             {
@@ -29,6 +29,7 @@ namespace ArduinoController.Core.Services
             }
 
             _deviceRepository.Add(device);
+            await RegisterDeviceToIoTHubAsync(device);
         }
 
         public void Delete(int id)
@@ -48,7 +49,7 @@ namespace ArduinoController.Core.Services
             _deviceRepository.Delete(toDelete);
         }
 
-        public void Update(int id, ArduinoDevice newDevice)
+        public async Task UpdateAsync(int id, ArduinoDevice newDevice)
         {
             if (id == 0)
             {
@@ -67,8 +68,12 @@ namespace ArduinoController.Core.Services
                 throw new RecordNotFoundException("There is no such device");
             }
 
+            await _registryManager.RemoveDeviceAsync(toUpdate.MacAddress);
+
             toUpdate.MacAddress = newDevice.MacAddress;
             toUpdate.Name = newDevice.Name;
+
+            await RegisterDeviceToIoTHubAsync(toUpdate);
         }
 
         public IQueryable<ArduinoDevice> GetAllUserDevices(string userId)
@@ -82,7 +87,7 @@ namespace ArduinoController.Core.Services
                 .Where(d => d.UserId == userId);
         }
 
-        public async Task RegisterDeviceToIoTHub(ArduinoDevice device)
+        private async Task RegisterDeviceToIoTHubAsync(ArduinoDevice device)
         {
             var iotHubDevice = new Device(device.MacAddress)
             {

@@ -12,7 +12,7 @@
 #include "CommandFactory.h"
 
 int access_point_start_time;
-unsigned long access_point_duration = 10000;
+unsigned long access_point_duration = 60000;
 
 bool is_access_point_initialization_done;
 CommandFactory* command_factory = new CommandFactory();
