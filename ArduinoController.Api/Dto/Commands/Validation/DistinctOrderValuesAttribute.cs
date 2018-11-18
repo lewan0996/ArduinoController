@@ -9,6 +9,11 @@ namespace ArduinoController.Api.Dto.Commands.Validation
     {
         public override bool IsValid(object value)
         {
+            if (value == null)
+            {
+                return true;
+            }
+
             if (!(value is IEnumerable<CommandDto> commands))
             {
                 throw new ArgumentException(
