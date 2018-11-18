@@ -32,7 +32,7 @@ namespace ArduinoController.Core.Services
             await RegisterDeviceToIoTHubAsync(device);
         }
 
-        public void Delete(int id)
+        public async Task DeleteAsync(int id)
         {
             if (id == 0)
             {
@@ -47,6 +47,7 @@ namespace ArduinoController.Core.Services
             }
 
             _deviceRepository.Delete(toDelete);
+            await _registryManager.RemoveDeviceAsync(toDelete.MacAddress);
         }
 
         public async Task UpdateAsync(int id, ArduinoDevice newDevice)

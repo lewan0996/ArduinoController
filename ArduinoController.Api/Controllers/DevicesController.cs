@@ -85,7 +85,7 @@ namespace ArduinoController.Api.Controllers
             {
                 try
                 {
-                    _deviceService.Delete(id);
+                    await _deviceService.DeleteAsync(id);
                     uow.Commit();
                 }
                 catch (RecordNotFoundException)

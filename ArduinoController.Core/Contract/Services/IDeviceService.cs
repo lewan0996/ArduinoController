@@ -10,7 +10,7 @@ namespace ArduinoController.Core.Contract.Services
         Task AddAsync(ArduinoDevice device);
         /// <exception cref="System.ArgumentException">Thrown when id=0 is given</exception>
         /// <exception cref="Exceptions.RecordNotFoundException">Thrown when no record with given id exists</exception>
-        void Delete(int id);
+        Task DeleteAsync(int id);
         /// <exception cref="System.ArgumentException">Thrown when id=0 is given</exception>
         /// <exception cref="System.ArgumentNullException">Thrown when given device is null</exception>
         /// <exception cref="Exceptions.RecordNotFoundException">Thrown when no record with given id exists</exception>
