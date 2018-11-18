@@ -42,14 +42,21 @@ namespace ArduinoController.Xamarin.Core.ViewModels
         private IMvxAsyncCommand _deleteProcedureCommand;
 
         public ICommand DeleteProcedureCommand => _deleteProcedureCommand =
-            _deleteProcedureCommand ?? new MvxAsyncCommand(DeleteDevice, () => true);
+            _deleteProcedureCommand ?? new MvxAsyncCommand(DeleteProcedure, () => true);
 
         public event EventHandler OnDeleted;
 
-        private async Task DeleteDevice()
+        private async Task DeleteProcedure()
         {
-            await _apiService.CallAsync($"procedures/{Id}", "DELETE");
-            OnDeleted?.Invoke(this, null);
+            try
+            {
+                await _apiService.CallAsync($"procedures/{Id}", "DELETE");
+                OnDeleted?.Invoke(this, null);
+            }
+            catch (UnsuccessfulStatusCodeException ex)
+            {
+
+            }
         }
 
         private IMvxAsyncCommand _runProcedureCommand;
