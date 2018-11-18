@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using ArduinoController.Xamarin.Core.Dto;
 using ArduinoController.Xamarin.Core.Dto.Commands;
+using ArduinoController.Xamarin.Core.Exceptions;
 using ArduinoController.Xamarin.Core.Services.Abstractions;
 using MvvmCross.Commands;
 using MvvmCross.ViewModels;
@@ -58,7 +59,15 @@ namespace ArduinoController.Xamarin.Core.ViewModels
 
         private async Task RunProcedure()
         {
-            await _apiService.CallAsync($"procedures/{Id}/execute", "POST");
+            try
+            {
+                await _apiService.CallAsync($"procedures/{Id}/execute", "POST");
+                // success message
+            }
+            catch (UnsuccessfulStatusCodeException ex)
+            {
+                //error message
+            }
         }
     }
 }

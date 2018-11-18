@@ -18,11 +18,25 @@
 		local:MvxItemTemplate="@layout/devicedropdownitem"
 		local:MvxDropDownItemTemplate="@layout/devicedropdownitem"
 		local:MvxBind="ItemsSource Devices; HandleItemSelected DeviceSelectedCommand"
-		 />
+	/>
+	<MvxListView
+		android:minWidth="25px"
+		android:minHeight="25px"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		local:MvxItemTemplate="@layout/commandlistviewitem"
+		local:MvxBind="ItemsSource Commands"
+		/>
+	<Button
+		android:text="Add command"
+		android:layout_width="match_parent"	
+		android:layout_height="wrap_content"
+		local:MvxBind="Click AddProcedureCommand"
+	/>
 	<Button
 		android:text="Add"
 		android:layout_width="match_parent"	
 		android:layout_height="wrap_content"
 		local:MvxBind="Click AddProcedureCommand"
-		/>
+	/>
 </LinearLayout>
