@@ -79,7 +79,7 @@ namespace ArduinoController.Api.Controllers
             string refreshToken;
             using (var uow = _unitOfWork.Create())
             {
-                refreshToken = await _authenticationService.GenerateAndSaveRefreshTokenAsync(dto.Email);
+                refreshToken = _authenticationService.GenerateAndSaveRefreshToken(dto.Email);
                 token = _authenticationService.GenerateToken(new[]
                 {
                     new Claim(ClaimTypes.Email, dto.Email),
@@ -94,7 +94,7 @@ namespace ArduinoController.Api.Controllers
         }
 
         [HttpPost("refresh")]
-        public async Task<IActionResult> Refresh([FromBody]RefreshTokenDto dto)
+        public IActionResult Refresh([FromBody]RefreshTokenDto dto)
         {
             if (!ModelState.IsValid)
             {
@@ -106,7 +106,7 @@ namespace ArduinoController.Api.Controllers
             {
                 try
                 {
-                    newTokens = await _authenticationService.Refresh(dto.Token, dto.RefreshToken);
+                    newTokens = _authenticationService.Refresh(dto.Token, dto.RefreshToken);
                     uow.Commit();
                 }
                 catch (SecurityTokenException ex)

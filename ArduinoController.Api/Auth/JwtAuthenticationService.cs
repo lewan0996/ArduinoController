@@ -5,9 +5,9 @@ using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
+using ArduinoController.Core.Contract.DataAccess;
+using ArduinoController.Core.Exceptions;
 using ArduinoController.DataAccess;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
@@ -16,35 +16,35 @@ namespace ArduinoController.Api.Auth
     public class JwtAuthenticationService : IAuthenticationService
     {
         private readonly IConfiguration _config;
-        private readonly UserManager<ApplicationUser> _userManager;
-        public JwtAuthenticationService(IConfiguration config, UserManager<ApplicationUser> userManager)
+        private readonly IRepository<ApplicationUser> _userRepository;
+        public JwtAuthenticationService(IConfiguration config, IRepository<ApplicationUser> userRepository)
         {
             _config = config;
-            _userManager = userManager;
+            _userRepository = userRepository;
         }
-        public async Task<string> GenerateAndSaveRefreshTokenAsync(string email)
+        public string GenerateAndSaveRefreshToken(string email)
         {
             var refreshToken = GenerateRefreshToken();
-            await SaveRefreshTokenAsync(email, refreshToken);
+            SaveRefreshToken(email, refreshToken);
 
             return refreshToken;
         }
 
-        public async Task<(string Token, string RefreshToken)> Refresh(string token, string refreshToken)
+        public (string Token, string RefreshToken) Refresh(string token, string refreshToken)
         {
             var principal = GetPrincipalFromExpiredToken(token);
             var email = principal.FindFirstValue(ClaimTypes.Email);
 
-            var savedRefreshTokens = await GetRefreshTokensAsync(email);
+            var savedRefreshTokens = GetRefreshTokens(email);
 
             if (savedRefreshTokens.All(rt => rt.Token != refreshToken))
             {
                 throw new SecurityTokenException("Invalid refresh token");
             }
 
-            await DeleteRefreshTokenAsync(email, refreshToken);
+            DeleteRefreshToken(email, refreshToken);
             var newRefreshToken = GenerateRefreshToken();
-            await SaveRefreshTokenAsync(email, newRefreshToken);
+            SaveRefreshToken(email, newRefreshToken);
             var newToken = GenerateToken(principal.Claims);
 
             return (newToken, newRefreshToken);
@@ -106,21 +106,35 @@ namespace ArduinoController.Api.Auth
             }
         }
 
-        private async Task<IEnumerable<RefreshToken>> GetRefreshTokensAsync(string email)
+        private ApplicationUser GetUserByEmail(string email)
         {
-            var user = await _userManager.FindByEmailAsync(email);
+            var user = _userRepository
+                .GetAll(u => u.RefreshTokens)
+                .FirstOrDefault(u => u.Email == email);
+
+            if (user == null)
+            {
+                throw new RecordNotFoundException();
+            }
+
+            return user;
+        }
+
+        private IEnumerable<RefreshToken> GetRefreshTokens(string email)
+        {
+            var user = GetUserByEmail(email);
             return user.RefreshTokens;
         }
 
-        private async Task SaveRefreshTokenAsync(string email, string token)
+        private void SaveRefreshToken(string email, string token)
         {
-            var user = await _userManager.FindByEmailAsync(email);
+            var user = GetUserByEmail(email);
             user.RefreshTokens.Add(new RefreshToken { Token = token });
         }
 
-        private async Task DeleteRefreshTokenAsync(string email, string token)
+        private void DeleteRefreshToken(string email, string token)
         {
-            var user = await _userManager.FindByEmailAsync(email);
+            var user = GetUserByEmail(email);
             var tokenToDelete = user.RefreshTokens.FirstOrDefault(rt => rt.Token == token);
 
             if (tokenToDelete == null)
