@@ -338,3 +338,5 @@ ASALocalRun/
 
 # End of https://www.gitignore.io/api/visualstudio
 ArduinoController\.Arduino/Debug/board\.buildinfo
+
+ArduinoController\.Api/obj/Debug/netcoreapp2\.0/
