@@ -33,6 +33,11 @@ namespace ArduinoController.DataAccess
                 .HasOne(p => p.Device)
                 .WithMany();
 
+            modelBuilder.Entity<Procedure>()
+                .HasMany(p => p.Commands)
+                .WithOne()
+                .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<ApplicationUser>()
                 .HasMany(u => u.Procedures)
                 .WithOne()
