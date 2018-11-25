@@ -35,14 +35,14 @@ namespace ArduinoController.Api.Auth
             var principal = GetPrincipalFromExpiredToken(token);
             var email = principal.FindFirstValue(ClaimTypes.Email);
 
-            var savedRefreshToken = await GetRefreshTokenAsync(email);
+            var savedRefreshTokens = await GetRefreshTokensAsync(email);
 
-            if (savedRefreshToken != refreshToken)
+            if (savedRefreshTokens.All(rt => rt.Token != refreshToken))
             {
                 throw new SecurityTokenException("Invalid refresh token");
             }
 
-            await DeleteRefreshTokenAsync(email);
+            await DeleteRefreshTokenAsync(email, refreshToken);
             var newRefreshToken = GenerateRefreshToken();
             await SaveRefreshTokenAsync(email, newRefreshToken);
             var newToken = GenerateToken(principal.Claims);
@@ -85,7 +85,7 @@ namespace ArduinoController.Api.Auth
             var tokenHandler = new JwtSecurityTokenHandler();
 
             var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out var securityToken);
-            
+
             if (!(securityToken is JwtSecurityToken jwtSecurityToken) ||
                 !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256,
                     StringComparison.InvariantCultureIgnoreCase))
@@ -106,22 +106,29 @@ namespace ArduinoController.Api.Auth
             }
         }
 
-        private async Task<string> GetRefreshTokenAsync(string email)
+        private async Task<IEnumerable<RefreshToken>> GetRefreshTokensAsync(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
-            return user.RefreshToken;
+            return user.RefreshTokens;
         }
 
         private async Task SaveRefreshTokenAsync(string email, string token)
         {
             var user = await _userManager.FindByEmailAsync(email);
-            user.RefreshToken = token;
+            user.RefreshTokens.Add(new RefreshToken { Token = token });
         }
 
-        private async Task DeleteRefreshTokenAsync(string email)
+        private async Task DeleteRefreshTokenAsync(string email, string token)
         {
             var user = await _userManager.FindByEmailAsync(email);
-            user.RefreshToken = null;
+            var tokenToDelete = user.RefreshTokens.FirstOrDefault(rt => rt.Token == token);
+
+            if (tokenToDelete == null)
+            {
+                throw new SecurityTokenException("Invalid refresh token");
+            }
+
+            user.RefreshTokens.Remove(tokenToDelete);
         }
     }
 }
