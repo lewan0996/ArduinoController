@@ -51,6 +51,8 @@ namespace ArduinoController.DataAccess
                 .IsRequired();
 
             modelBuilder.Entity<ArduinoDevice>().HasKey(d => d.Id);
+
+            modelBuilder.Entity<RefreshToken>().HasKey(rt => rt.Id);
         }
     }
 }
