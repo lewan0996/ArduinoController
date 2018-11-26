@@ -31,12 +31,12 @@
 		android:text="Add command"
 		android:layout_width="match_parent"	
 		android:layout_height="wrap_content"
-		local:MvxBind="Click AddProcedureCommand"
+		local:MvxBind="Click AddCommandCommand"
 	/>
 	<Button
-		android:text="Add"
+		android:text="Save"
 		android:layout_width="match_parent"	
 		android:layout_height="wrap_content"
-		local:MvxBind="Click AddProcedureCommand"
+		local:MvxBind="Click SaveProcedureCommand"
 	/>
 </LinearLayout>

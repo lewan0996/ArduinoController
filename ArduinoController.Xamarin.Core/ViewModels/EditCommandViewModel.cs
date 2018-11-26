@@ -1,16 +1,38 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
+using ArduinoController.Xamarin.Core.Dto.Commands;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
 
 namespace ArduinoController.Xamarin.Core.ViewModels
 {
-    public class EditCommandViewModel : MvxViewModel
+    public class EditCommandViewModel : MvxViewModel<short, CommandDto>
     {
+        private short _order;
         private readonly IMvxNavigationService _navigationService;
-        private byte _pinNumber;
 
-        public byte PinNumber
+        private CommandTypeHolder _selectedType;
+
+        public CommandTypeHolder SelectedType
+        {
+            get => _selectedType;
+            set => SetProperty(ref _selectedType, value);
+        }
+
+        private IMvxCommand<CommandTypeHolder> _commandTypeSelectedCommand;
+
+        public IMvxCommand<CommandTypeHolder> CommandTypeSelectedCommand => _commandTypeSelectedCommand =
+            _commandTypeSelectedCommand ?? new MvxCommand<CommandTypeHolder>(OnCommandTypeSelected);
+
+        private void OnCommandTypeSelected(CommandTypeHolder selectedType)
+        {
+            SelectedType = selectedType;
+        }
+
+        private int _pinNumber;
+
+        public int PinNumber
         {
             get => _pinNumber;
             set => SetProperty(ref _pinNumber, value);
@@ -40,6 +62,11 @@ namespace ArduinoController.Xamarin.Core.ViewModels
             set => SetProperty(ref _duration, value);
         }
 
+        public override void Prepare(short order)
+        {
+            _order = order;
+        }
+
         private IMvxAsyncCommand _saveCommandCommand;
 
         public IMvxAsyncCommand SaveCommandCommand =>
@@ -47,7 +74,8 @@ namespace ArduinoController.Xamarin.Core.ViewModels
 
         private async Task Save()
         {
-            await _navigationService.Close(this);
+            var commandDto = CreateCommandDto();
+            await _navigationService.Close(this, commandDto);
         }
 
         public CommandTypeHolder[] CommandTypes { get; set; }
@@ -78,6 +106,41 @@ namespace ArduinoController.Xamarin.Core.ViewModels
                     Type = CommandType.Wait
                 }
             };
+        }
+
+        public CommandDto CreateCommandDto()
+        {
+            switch (SelectedType.Type)
+            {
+                case CommandType.DigitalWrite:
+                    return new DigitalWriteCommandDto
+                    {
+                        Order = _order,
+                        //PinNumber = PinNumber,
+                        Value = Value
+                    };
+                case CommandType.AnalogWrite:
+                    return new AnalogWriteCommandDto
+                    {
+                        Order = _order,
+                       // PinNumber = PinNumber,
+                        Value = AnalogValue
+                    };
+                case CommandType.Negate:
+                    return new NegateCommandDto
+                    {
+                        Order = _order,
+                        //PinNumber = PinNumber
+                    };
+                case CommandType.Wait:
+                    return new WaitCommandDto
+                    {
+                        Order = _order,
+                        Duration = Duration
+                    };
+                default:
+                    throw new Exception("Unknown command type");
+            }
         }
     }
 
