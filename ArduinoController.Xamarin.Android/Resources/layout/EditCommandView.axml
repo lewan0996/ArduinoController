@@ -1,7 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    xmlns:local="http://schemas.android.com/apk/res-auto"
+	android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
+	<MvxSpinner
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		local:MvxItemTemplate="@layout/commandtypedropdownitem"
+		local:MvxDropDownItemTemplate="@layout/commandtypedropdownitem"
+		local:MvxBind="ItemsSource CommandTypes; HandleItemSelected CommandTypeSelectedCommand"
+	/>
+	<EditText
+		android:inputType="number"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:minWidth="25px"
+		android:minHeight="25px"
+		android:hint="Pin number"		
+		local:MvxBind="Text PinNumber"
+	/>
+	<EditText
+		android:inputType="number"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:minWidth="25px"
+		android:minHeight="25px"
+		android:hint="Value"		
+		local:MvxBind="Text Value"
+	/>
+	<EditText
+		android:inputType="number"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:minWidth="25px"
+		android:minHeight="25px"
+		android:hint="Duration(ms)"		
+		local:MvxBind="Text Duration"
+	/>
+	<Button
+		android:text="Add"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		local:MvxBind="Click AddCommandCommandCommand"
+	/>
 </LinearLayout>

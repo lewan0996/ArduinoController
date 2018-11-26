@@ -54,10 +54,20 @@ namespace ArduinoController.Xamarin.Core.ViewModels
             set => SetProperty(ref _devices, value);
         }
 
+        private async Task NavigateToEditCommand()
+        {
+            await _navigationService.Navigate<EditCommandViewModel>();
+        }
+
+        private IMvxAsyncCommand _addCommandCommand;
+
+        public IMvxAsyncCommand AddCommandCommand =>
+            _addCommandCommand = _addCommandCommand ?? new MvxAsyncCommand(NavigateToEditCommand);
+
         private IMvxAsyncCommand _addProcedureCommand;
 
-        public IMvxAsyncCommand AddProcedureCommand => _addProcedureCommand =
-            _addProcedureCommand ?? new MvxAsyncCommand(AddProcedure);
+        public IMvxAsyncCommand AddProcedureCommand =>
+            _addProcedureCommand = _addProcedureCommand ?? new MvxAsyncCommand(AddProcedure);
 
         private async Task AddProcedure()
         {
@@ -75,7 +85,7 @@ namespace ArduinoController.Xamarin.Core.ViewModels
             {
                 // error message
             }
-            
+
             await _navigationService.Close(this);
         }
 
@@ -85,7 +95,7 @@ namespace ArduinoController.Xamarin.Core.ViewModels
             {
                 try
                 {
-                    var devices =  _apiService.CallAsync<DeviceDto[]>("devices", "GET")
+                    var devices = _apiService.CallAsync<DeviceDto[]>("devices", "GET")
                         .GetAwaiter()
                         .GetResult();
                     Devices = devices;
