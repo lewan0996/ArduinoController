@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Acr.UserDialogs;
 using ArduinoController.Xamarin.Core.Dto;
 using ArduinoController.Xamarin.Core.Exceptions;
 using ArduinoController.Xamarin.Core.Services.Abstractions;
@@ -14,11 +15,13 @@ namespace ArduinoController.Xamarin.Core.ViewModels
     {
         private readonly IMvxNavigationService _navigationService;
         private readonly IApiService _apiService;
+        private readonly IUserDialogs _userDialogs;
 
-        public MainViewModel(IMvxNavigationService navigationService, IApiService apiService)
+        public MainViewModel(IMvxNavigationService navigationService, IApiService apiService, IUserDialogs userDialogs)
         {
             _navigationService = navigationService;
             _apiService = apiService;
+            _userDialogs = userDialogs;
         }
 
         private ICommand _navigateToDevicesCommand;
@@ -58,14 +61,16 @@ namespace ArduinoController.Xamarin.Core.ViewModels
 
         public override void ViewAppearing()
         {
-            
             Task.Run(async () =>
             {
+                _userDialogs.ShowLoading();
                 if (!_apiService.IsLoggedIn)
                 {
+                    _userDialogs.HideLoading();
                     await _navigationService.Navigate<LoginViewModel>();
                     return;
                 }
+
                 try
                 {
                     var procedures = await _apiService.CallAsync<ProcedureDto[]>("procedures", "GET");
@@ -73,7 +78,7 @@ namespace ArduinoController.Xamarin.Core.ViewModels
                         procedures.Select(p =>
                         {
                             var procedureListViewItemViewModel =
-                                new ProcedureListViewItemViewModel(_apiService, p);
+                                new ProcedureListViewItemViewModel(_apiService, p, _userDialogs);
                             procedureListViewItemViewModel.OnDeleted += (s, e) => { ViewAppearing(); };
 
                             return procedureListViewItemViewModel;
@@ -81,7 +86,11 @@ namespace ArduinoController.Xamarin.Core.ViewModels
                 }
                 catch (UnsuccessfulStatusCodeException ex)
                 {
-                    // error message
+                    _userDialogs.Alert(ex.ErrorPhrase + " " + ex.Message);
+                }
+                finally
+                {
+                    _userDialogs.HideLoading();
                 }
             });
         }

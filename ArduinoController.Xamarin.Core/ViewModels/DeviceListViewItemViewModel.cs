@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Acr.UserDialogs;
 using ArduinoController.Xamarin.Core.Dto;
+using ArduinoController.Xamarin.Core.Exceptions;
 using ArduinoController.Xamarin.Core.Services.Abstractions;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
@@ -13,12 +15,14 @@ namespace ArduinoController.Xamarin.Core.ViewModels
     {
         private readonly IMvxNavigationService _navigationService;
         private readonly IApiService _apiService;
+        private readonly IUserDialogs _userDialogs;
 
         public DeviceListViewItemViewModel(IMvxNavigationService navigationService, IApiService apiService,
-            DeviceDto device)
+            DeviceDto device, IUserDialogs userDialogs)
         {
             _navigationService = navigationService;
             _apiService = apiService;
+            _userDialogs = userDialogs;
 
             Id = device.Id;
             MacAddress = device.MacAddress;
@@ -69,8 +73,21 @@ namespace ArduinoController.Xamarin.Core.ViewModels
 
         private async Task DeleteDevice()
         {
-            await _apiService.CallAsync($"devices/{Id}", "DELETE");
-            OnDeleted?.Invoke(this, null);
+            _userDialogs.ShowLoading();
+            try
+            {
+                await _apiService.CallAsync($"devices/{Id}", "DELETE");
+                OnDeleted?.Invoke(this, null);
+            }
+            catch (UnsuccessfulStatusCodeException ex)
+            {
+                _userDialogs.Alert(ex.ErrorPhrase + " " + ex.Message);
+            }
+            finally
+            {
+                _userDialogs.HideLoading();
+            }
+            
         }
     }
 }

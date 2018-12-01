@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Acr.UserDialogs;
 using ArduinoController.Xamarin.Core.Dto;
-using ArduinoController.Xamarin.Core.Dto.Commands;
 using ArduinoController.Xamarin.Core.Exceptions;
 using ArduinoController.Xamarin.Core.Services.Abstractions;
 using MvvmCross.Commands;
@@ -13,13 +13,15 @@ namespace ArduinoController.Xamarin.Core.ViewModels
     public class ProcedureListViewItemViewModel : MvxViewModel
     {
         private readonly IApiService _apiService;
+        private readonly IUserDialogs _userDialogs;
 
-        public ProcedureListViewItemViewModel(IApiService apiService, ProcedureDto procedureDto)
+        public ProcedureListViewItemViewModel(IApiService apiService, ProcedureDto procedureDto,
+            IUserDialogs userDialogs)
         {
             _apiService = apiService;
+            _userDialogs = userDialogs;
             Id = procedureDto.Id;
             Name = procedureDto.Name;
-            _commands = procedureDto.Commands;
         }
 
         private int _id;
@@ -37,8 +39,6 @@ namespace ArduinoController.Xamarin.Core.ViewModels
             set => SetProperty(ref _name, value);
         }
 
-        private CommandDto[] _commands;
-
         private IMvxAsyncCommand _deleteProcedureCommand;
 
         public ICommand DeleteProcedureCommand => _deleteProcedureCommand =
@@ -48,6 +48,7 @@ namespace ArduinoController.Xamarin.Core.ViewModels
 
         private async Task DeleteProcedure()
         {
+            _userDialogs.ShowLoading();
             try
             {
                 await _apiService.CallAsync($"procedures/{Id}", "DELETE");
@@ -55,7 +56,11 @@ namespace ArduinoController.Xamarin.Core.ViewModels
             }
             catch (UnsuccessfulStatusCodeException ex)
             {
-
+                _userDialogs.Alert(ex.ErrorPhrase + " " + ex.Message);
+            }
+            finally
+            {
+                _userDialogs.HideLoading();
             }
         }
 
@@ -64,17 +69,26 @@ namespace ArduinoController.Xamarin.Core.ViewModels
         public ICommand RunProcedureCommand => _runProcedureCommand =
             _runProcedureCommand ?? new MvxAsyncCommand(RunProcedure, () => true);
 
-        private async Task RunProcedure()
+        private Task RunProcedure()
         {
-            try
+            return Task.Run(async () =>
             {
-                await _apiService.CallAsync($"procedures/{Id}/execute", "POST");
-                // success message
-            }
-            catch (UnsuccessfulStatusCodeException ex)
-            {
-                //error message
-            }
+                _userDialogs.ShowLoading();
+                try
+                {
+                    await _apiService.CallAsync($"procedures/{Id}/execute", "POST");
+                    _userDialogs.Alert("Procedure executed successfully");
+                }
+                catch (UnsuccessfulStatusCodeException ex)
+                {
+                    _userDialogs.Alert(ex.ErrorPhrase + " " + ex.Message);
+                }
+                finally
+                {
+                    _userDialogs.HideLoading();
+                }
+            });
+
         }
     }
 }

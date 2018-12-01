@@ -8,22 +8,5 @@
 		android:textSize="24sp"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		local:MvxBind="Text Type"/>		
-	<LinearLayout
-		android:orientation="horizontal"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content">
-		<Button
-			android:text="Edit"
-			android:layout_height="match_parent"
-			android:layout_width="wrap_content"
-			android:layout_weight="1"
-			local:MvxBind="Click EditCommandCommand"/>
-		<Button
-			android:text="Delete"
-			android:layout_height="match_parent"
-			android:layout_width="wrap_content"
-			android:layout_weight="1"
-			local:MvxBind="Click DeleteCommandCommand"/>
-	</LinearLayout>
+		local:MvxBind="Text Type"/>			
 </LinearLayout>

@@ -10,7 +10,20 @@ namespace ArduinoController.Xamarin.Core.Dto.Commands.Deserialization
     {
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            throw new NotImplementedException();
+            var jo = new JObject();
+            var type = value.GetType();
+            jo.Add("type", type.Name.Replace("CommandDto", ""));
+
+            foreach (var prop in type.GetProperties())
+            {
+                if (!prop.CanRead) continue;
+                var propVal = prop.GetValue(value, null);
+                if (propVal != null)
+                {
+                    jo.Add(prop.Name, JToken.FromObject(propVal, serializer));
+                }
+            }
+            jo.WriteTo(writer);
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)

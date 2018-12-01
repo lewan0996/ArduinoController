@@ -26,6 +26,43 @@ namespace ArduinoController.Xamarin.Android
 		
 		public static void UpdateIdValues()
 		{
+			global::AndroidHUD.Resource.Attribute.ahBarColor = global::ArduinoController.Xamarin.Android.Resource.Attribute.ahBarColor;
+			global::AndroidHUD.Resource.Attribute.ahBarLength = global::ArduinoController.Xamarin.Android.Resource.Attribute.ahBarLength;
+			global::AndroidHUD.Resource.Attribute.ahBarWidth = global::ArduinoController.Xamarin.Android.Resource.Attribute.ahBarWidth;
+			global::AndroidHUD.Resource.Attribute.ahCircleColor = global::ArduinoController.Xamarin.Android.Resource.Attribute.ahCircleColor;
+			global::AndroidHUD.Resource.Attribute.ahDelayMillis = global::ArduinoController.Xamarin.Android.Resource.Attribute.ahDelayMillis;
+			global::AndroidHUD.Resource.Attribute.ahRadius = global::ArduinoController.Xamarin.Android.Resource.Attribute.ahRadius;
+			global::AndroidHUD.Resource.Attribute.ahRimColor = global::ArduinoController.Xamarin.Android.Resource.Attribute.ahRimColor;
+			global::AndroidHUD.Resource.Attribute.ahRimWidth = global::ArduinoController.Xamarin.Android.Resource.Attribute.ahRimWidth;
+			global::AndroidHUD.Resource.Attribute.ahSpinSpeed = global::ArduinoController.Xamarin.Android.Resource.Attribute.ahSpinSpeed;
+			global::AndroidHUD.Resource.Attribute.ahText = global::ArduinoController.Xamarin.Android.Resource.Attribute.ahText;
+			global::AndroidHUD.Resource.Attribute.ahTextColor = global::ArduinoController.Xamarin.Android.Resource.Attribute.ahTextColor;
+			global::AndroidHUD.Resource.Attribute.ahTextSize = global::ArduinoController.Xamarin.Android.Resource.Attribute.ahTextSize;
+			global::AndroidHUD.Resource.Drawable.ic_errorstatus = global::ArduinoController.Xamarin.Android.Resource.Drawable.ic_errorstatus;
+			global::AndroidHUD.Resource.Drawable.ic_successstatus = global::ArduinoController.Xamarin.Android.Resource.Drawable.ic_successstatus;
+			global::AndroidHUD.Resource.Drawable.roundedbg = global::ArduinoController.Xamarin.Android.Resource.Drawable.roundedbg;
+			global::AndroidHUD.Resource.Drawable.roundedbgdark = global::ArduinoController.Xamarin.Android.Resource.Drawable.roundedbgdark;
+			global::AndroidHUD.Resource.Id.loadingImage = global::ArduinoController.Xamarin.Android.Resource.Id.loadingImage;
+			global::AndroidHUD.Resource.Id.loadingProgressBar = global::ArduinoController.Xamarin.Android.Resource.Id.loadingProgressBar;
+			global::AndroidHUD.Resource.Id.loadingProgressWheel = global::ArduinoController.Xamarin.Android.Resource.Id.loadingProgressWheel;
+			global::AndroidHUD.Resource.Id.textViewStatus = global::ArduinoController.Xamarin.Android.Resource.Id.textViewStatus;
+			global::AndroidHUD.Resource.Layout.loading = global::ArduinoController.Xamarin.Android.Resource.Layout.loading;
+			global::AndroidHUD.Resource.Layout.loadingimage = global::ArduinoController.Xamarin.Android.Resource.Layout.loadingimage;
+			global::AndroidHUD.Resource.Layout.loadingprogress = global::ArduinoController.Xamarin.Android.Resource.Layout.loadingprogress;
+			global::AndroidHUD.Resource.String.library_name = global::ArduinoController.Xamarin.Android.Resource.String.library_name;
+			global::AndroidHUD.Resource.Styleable.ProgressWheel = global::ArduinoController.Xamarin.Android.Resource.Styleable.ProgressWheel;
+			global::AndroidHUD.Resource.Styleable.ProgressWheel_ahBarColor = global::ArduinoController.Xamarin.Android.Resource.Styleable.ProgressWheel_ahBarColor;
+			global::AndroidHUD.Resource.Styleable.ProgressWheel_ahBarLength = global::ArduinoController.Xamarin.Android.Resource.Styleable.ProgressWheel_ahBarLength;
+			global::AndroidHUD.Resource.Styleable.ProgressWheel_ahBarWidth = global::ArduinoController.Xamarin.Android.Resource.Styleable.ProgressWheel_ahBarWidth;
+			global::AndroidHUD.Resource.Styleable.ProgressWheel_ahCircleColor = global::ArduinoController.Xamarin.Android.Resource.Styleable.ProgressWheel_ahCircleColor;
+			global::AndroidHUD.Resource.Styleable.ProgressWheel_ahDelayMillis = global::ArduinoController.Xamarin.Android.Resource.Styleable.ProgressWheel_ahDelayMillis;
+			global::AndroidHUD.Resource.Styleable.ProgressWheel_ahRadius = global::ArduinoController.Xamarin.Android.Resource.Styleable.ProgressWheel_ahRadius;
+			global::AndroidHUD.Resource.Styleable.ProgressWheel_ahRimColor = global::ArduinoController.Xamarin.Android.Resource.Styleable.ProgressWheel_ahRimColor;
+			global::AndroidHUD.Resource.Styleable.ProgressWheel_ahRimWidth = global::ArduinoController.Xamarin.Android.Resource.Styleable.ProgressWheel_ahRimWidth;
+			global::AndroidHUD.Resource.Styleable.ProgressWheel_ahSpinSpeed = global::ArduinoController.Xamarin.Android.Resource.Styleable.ProgressWheel_ahSpinSpeed;
+			global::AndroidHUD.Resource.Styleable.ProgressWheel_ahText = global::ArduinoController.Xamarin.Android.Resource.Styleable.ProgressWheel_ahText;
+			global::AndroidHUD.Resource.Styleable.ProgressWheel_ahTextColor = global::ArduinoController.Xamarin.Android.Resource.Styleable.ProgressWheel_ahTextColor;
+			global::AndroidHUD.Resource.Styleable.ProgressWheel_ahTextSize = global::ArduinoController.Xamarin.Android.Resource.Styleable.ProgressWheel_ahTextSize;
 			global::MvvmCross.Resource.Attribute.MvxBind = global::ArduinoController.Xamarin.Android.Resource.Attribute.MvxBind;
 			global::MvvmCross.Resource.Attribute.MvxDropDownItemTemplate = global::ArduinoController.Xamarin.Android.Resource.Attribute.MvxDropDownItemTemplate;
 			global::MvvmCross.Resource.Attribute.MvxGroupItemTemplate = global::ArduinoController.Xamarin.Android.Resource.Attribute.MvxGroupItemTemplate;
@@ -245,6 +282,42 @@ namespace ArduinoController.Xamarin.Android
 			
 			// aapt resource value: 0x7f010075
 			public const int activityChooserViewStyle = 2130772085;
+			
+			// aapt resource value: 0x7f010163
+			public const int ahBarColor = 2130772323;
+			
+			// aapt resource value: 0x7f01016b
+			public const int ahBarLength = 2130772331;
+			
+			// aapt resource value: 0x7f01016a
+			public const int ahBarWidth = 2130772330;
+			
+			// aapt resource value: 0x7f010168
+			public const int ahCircleColor = 2130772328;
+			
+			// aapt resource value: 0x7f010167
+			public const int ahDelayMillis = 2130772327;
+			
+			// aapt resource value: 0x7f010169
+			public const int ahRadius = 2130772329;
+			
+			// aapt resource value: 0x7f010164
+			public const int ahRimColor = 2130772324;
+			
+			// aapt resource value: 0x7f010165
+			public const int ahRimWidth = 2130772325;
+			
+			// aapt resource value: 0x7f010166
+			public const int ahSpinSpeed = 2130772326;
+			
+			// aapt resource value: 0x7f010160
+			public const int ahText = 2130772320;
+			
+			// aapt resource value: 0x7f010161
+			public const int ahTextColor = 2130772321;
+			
+			// aapt resource value: 0x7f010162
+			public const int ahTextSize = 2130772322;
 			
 			// aapt resource value: 0x7f01009a
 			public const int alertDialogButtonGroupStyle = 2130772122;
@@ -2263,26 +2336,26 @@ namespace ArduinoController.Xamarin.Android
 			// aapt resource value: 0x7f020053
 			public const int avd_hide_password = 2130837587;
 			
-			// aapt resource value: 0x7f02006a
-			public const int avd_hide_password_1 = 2130837610;
+			// aapt resource value: 0x7f02006e
+			public const int avd_hide_password_1 = 2130837614;
 			
-			// aapt resource value: 0x7f02006b
-			public const int avd_hide_password_2 = 2130837611;
+			// aapt resource value: 0x7f02006f
+			public const int avd_hide_password_2 = 2130837615;
 			
-			// aapt resource value: 0x7f02006c
-			public const int avd_hide_password_3 = 2130837612;
+			// aapt resource value: 0x7f020070
+			public const int avd_hide_password_3 = 2130837616;
 			
 			// aapt resource value: 0x7f020054
 			public const int avd_show_password = 2130837588;
 			
-			// aapt resource value: 0x7f02006d
-			public const int avd_show_password_1 = 2130837613;
+			// aapt resource value: 0x7f020071
+			public const int avd_show_password_1 = 2130837617;
 			
-			// aapt resource value: 0x7f02006e
-			public const int avd_show_password_2 = 2130837614;
+			// aapt resource value: 0x7f020072
+			public const int avd_show_password_2 = 2130837618;
 			
-			// aapt resource value: 0x7f02006f
-			public const int avd_show_password_3 = 2130837615;
+			// aapt resource value: 0x7f020073
+			public const int avd_show_password_3 = 2130837619;
 			
 			// aapt resource value: 0x7f020055
 			public const int design_bottom_navigation_item_background = 2130837589;
@@ -2303,49 +2376,61 @@ namespace ArduinoController.Xamarin.Android
 			public const int design_snackbar_background = 2130837594;
 			
 			// aapt resource value: 0x7f02005b
-			public const int navigation_empty_icon = 2130837595;
+			public const int ic_errorstatus = 2130837595;
 			
 			// aapt resource value: 0x7f02005c
-			public const int notification_action_background = 2130837596;
+			public const int ic_successstatus = 2130837596;
 			
 			// aapt resource value: 0x7f02005d
-			public const int notification_bg = 2130837597;
+			public const int navigation_empty_icon = 2130837597;
 			
 			// aapt resource value: 0x7f02005e
-			public const int notification_bg_low = 2130837598;
+			public const int notification_action_background = 2130837598;
 			
 			// aapt resource value: 0x7f02005f
-			public const int notification_bg_low_normal = 2130837599;
+			public const int notification_bg = 2130837599;
 			
 			// aapt resource value: 0x7f020060
-			public const int notification_bg_low_pressed = 2130837600;
+			public const int notification_bg_low = 2130837600;
 			
 			// aapt resource value: 0x7f020061
-			public const int notification_bg_normal = 2130837601;
+			public const int notification_bg_low_normal = 2130837601;
 			
 			// aapt resource value: 0x7f020062
-			public const int notification_bg_normal_pressed = 2130837602;
+			public const int notification_bg_low_pressed = 2130837602;
 			
 			// aapt resource value: 0x7f020063
-			public const int notification_icon_background = 2130837603;
-			
-			// aapt resource value: 0x7f020068
-			public const int notification_template_icon_bg = 2130837608;
-			
-			// aapt resource value: 0x7f020069
-			public const int notification_template_icon_low_bg = 2130837609;
+			public const int notification_bg_normal = 2130837603;
 			
 			// aapt resource value: 0x7f020064
-			public const int notification_tile_bg = 2130837604;
+			public const int notification_bg_normal_pressed = 2130837604;
 			
 			// aapt resource value: 0x7f020065
-			public const int notify_panel_notification_icon_bg = 2130837605;
+			public const int notification_icon_background = 2130837605;
+			
+			// aapt resource value: 0x7f02006c
+			public const int notification_template_icon_bg = 2130837612;
+			
+			// aapt resource value: 0x7f02006d
+			public const int notification_template_icon_low_bg = 2130837613;
 			
 			// aapt resource value: 0x7f020066
-			public const int tooltip_frame_dark = 2130837606;
+			public const int notification_tile_bg = 2130837606;
 			
 			// aapt resource value: 0x7f020067
-			public const int tooltip_frame_light = 2130837607;
+			public const int notify_panel_notification_icon_bg = 2130837607;
+			
+			// aapt resource value: 0x7f020068
+			public const int roundedbg = 2130837608;
+			
+			// aapt resource value: 0x7f020069
+			public const int roundedbgdark = 2130837609;
+			
+			// aapt resource value: 0x7f02006a
+			public const int tooltip_frame_dark = 2130837610;
+			
+			// aapt resource value: 0x7f02006b
+			public const int tooltip_frame_light = 2130837611;
 			
 			static Drawable()
 			{
@@ -2378,8 +2463,8 @@ namespace ArduinoController.Xamarin.Android
 			// aapt resource value: 0x7f08001e
 			public const int MvxBindingTagUnique = 2131230750;
 			
-			// aapt resource value: 0x7f0800b1
-			public const int RegisterButton = 2131230897;
+			// aapt resource value: 0x7f0800b5
+			public const int RegisterButton = 2131230901;
 			
 			// aapt resource value: 0x7f080038
 			public const int SHIFT = 2131230776;
@@ -2387,8 +2472,8 @@ namespace ArduinoController.Xamarin.Android
 			// aapt resource value: 0x7f080039
 			public const int SYM = 2131230777;
 			
-			// aapt resource value: 0x7f08009f
-			public const int action0 = 2131230879;
+			// aapt resource value: 0x7f0800a3
+			public const int action0 = 2131230883;
 			
 			// aapt resource value: 0x7f08007e
 			public const int action_bar = 2131230846;
@@ -2411,17 +2496,17 @@ namespace ArduinoController.Xamarin.Android
 			// aapt resource value: 0x7f08005c
 			public const int action_bar_title = 2131230812;
 			
-			// aapt resource value: 0x7f08009c
-			public const int action_container = 2131230876;
+			// aapt resource value: 0x7f0800a0
+			public const int action_container = 2131230880;
 			
 			// aapt resource value: 0x7f08007f
 			public const int action_context_bar = 2131230847;
 			
-			// aapt resource value: 0x7f0800a3
-			public const int action_divider = 2131230883;
+			// aapt resource value: 0x7f0800a7
+			public const int action_divider = 2131230887;
 			
-			// aapt resource value: 0x7f08009d
-			public const int action_image = 2131230877;
+			// aapt resource value: 0x7f0800a1
+			public const int action_image = 2131230881;
 			
 			// aapt resource value: 0x7f080003
 			public const int action_menu_divider = 2131230723;
@@ -2438,11 +2523,11 @@ namespace ArduinoController.Xamarin.Android
 			// aapt resource value: 0x7f08005e
 			public const int action_mode_close_button = 2131230814;
 			
-			// aapt resource value: 0x7f08009e
-			public const int action_text = 2131230878;
+			// aapt resource value: 0x7f0800a2
+			public const int action_text = 2131230882;
 			
-			// aapt resource value: 0x7f0800ac
-			public const int actions = 2131230892;
+			// aapt resource value: 0x7f0800b0
+			public const int actions = 2131230896;
 			
 			// aapt resource value: 0x7f08005f
 			public const int activity_chooser_view_content = 2131230815;
@@ -2477,8 +2562,8 @@ namespace ArduinoController.Xamarin.Android
 			// aapt resource value: 0x7f080065
 			public const int buttonPanel = 2131230821;
 			
-			// aapt resource value: 0x7f0800a0
-			public const int cancel_action = 2131230880;
+			// aapt resource value: 0x7f0800a4
+			public const int cancel_action = 2131230884;
 			
 			// aapt resource value: 0x7f080047
 			public const int center = 2131230791;
@@ -2492,8 +2577,8 @@ namespace ArduinoController.Xamarin.Android
 			// aapt resource value: 0x7f080075
 			public const int checkbox = 2131230837;
 			
-			// aapt resource value: 0x7f0800a8
-			public const int chronometer = 2131230888;
+			// aapt resource value: 0x7f0800ac
+			public const int chronometer = 2131230892;
 			
 			// aapt resource value: 0x7f080050
 			public const int clip_horizontal = 2131230800;
@@ -2546,14 +2631,14 @@ namespace ArduinoController.Xamarin.Android
 			// aapt resource value: 0x7f080080
 			public const int edit_query = 2131230848;
 			
-			// aapt resource value: 0x7f08009b
-			public const int emailEditText = 2131230875;
+			// aapt resource value: 0x7f08009f
+			public const int emailEditText = 2131230879;
 			
 			// aapt resource value: 0x7f080032
 			public const int end = 2131230770;
 			
-			// aapt resource value: 0x7f0800ae
-			public const int end_padder = 2131230894;
+			// aapt resource value: 0x7f0800b2
+			public const int end_padder = 2131230898;
 			
 			// aapt resource value: 0x7f080041
 			public const int enterAlways = 2131230785;
@@ -2597,8 +2682,8 @@ namespace ArduinoController.Xamarin.Android
 			// aapt resource value: 0x7f080064
 			public const int icon = 2131230820;
 			
-			// aapt resource value: 0x7f0800ad
-			public const int icon_group = 2131230893;
+			// aapt resource value: 0x7f0800b1
+			public const int icon_group = 2131230897;
 			
 			// aapt resource value: 0x7f08003c
 			public const int ifRoom = 2131230780;
@@ -2606,8 +2691,8 @@ namespace ArduinoController.Xamarin.Android
 			// aapt resource value: 0x7f080061
 			public const int image = 2131230817;
 			
-			// aapt resource value: 0x7f0800a9
-			public const int info = 2131230889;
+			// aapt resource value: 0x7f0800ad
+			public const int info = 2131230893;
 			
 			// aapt resource value: 0x7f08005b
 			public const int italic = 2131230811;
@@ -2633,14 +2718,23 @@ namespace ArduinoController.Xamarin.Android
 			// aapt resource value: 0x7f080063
 			public const int list_item = 2131230819;
 			
-			// aapt resource value: 0x7f0800b4
-			public const int masked = 2131230900;
+			// aapt resource value: 0x7f08009d
+			public const int loadingImage = 2131230877;
 			
-			// aapt resource value: 0x7f0800a2
-			public const int media_actions = 2131230882;
+			// aapt resource value: 0x7f08009b
+			public const int loadingProgressBar = 2131230875;
 			
-			// aapt resource value: 0x7f0800b2
-			public const int message = 2131230898;
+			// aapt resource value: 0x7f08009e
+			public const int loadingProgressWheel = 2131230878;
+			
+			// aapt resource value: 0x7f0800b8
+			public const int masked = 2131230904;
+			
+			// aapt resource value: 0x7f0800a6
+			public const int media_actions = 2131230886;
+			
+			// aapt resource value: 0x7f0800b6
+			public const int message = 2131230902;
 			
 			// aapt resource value: 0x7f080033
 			public const int middle = 2131230771;
@@ -2663,14 +2757,14 @@ namespace ArduinoController.Xamarin.Android
 			// aapt resource value: 0x7f080020
 			public const int normal = 2131230752;
 			
-			// aapt resource value: 0x7f0800ab
-			public const int notification_background = 2131230891;
+			// aapt resource value: 0x7f0800af
+			public const int notification_background = 2131230895;
 			
-			// aapt resource value: 0x7f0800a5
-			public const int notification_main_column = 2131230885;
+			// aapt resource value: 0x7f0800a9
+			public const int notification_main_column = 2131230889;
 			
-			// aapt resource value: 0x7f0800a4
-			public const int notification_main_column_container = 2131230884;
+			// aapt resource value: 0x7f0800a8
+			public const int notification_main_column_container = 2131230888;
 			
 			// aapt resource value: 0x7f08004e
 			public const int parallax = 2131230798;
@@ -2681,11 +2775,11 @@ namespace ArduinoController.Xamarin.Android
 			// aapt resource value: 0x7f08000b
 			public const int parent_matrix = 2131230731;
 			
-			// aapt resource value: 0x7f0800b0
-			public const int passwordConfirmText = 2131230896;
+			// aapt resource value: 0x7f0800b4
+			public const int passwordConfirmText = 2131230900;
 			
-			// aapt resource value: 0x7f0800af
-			public const int passwordEditText = 2131230895;
+			// aapt resource value: 0x7f0800b3
+			public const int passwordEditText = 2131230899;
 			
 			// aapt resource value: 0x7f08004f
 			public const int pin = 2131230799;
@@ -2702,11 +2796,11 @@ namespace ArduinoController.Xamarin.Android
 			// aapt resource value: 0x7f08004c
 			public const int right = 2131230796;
 			
-			// aapt resource value: 0x7f0800aa
-			public const int right_icon = 2131230890;
+			// aapt resource value: 0x7f0800ae
+			public const int right_icon = 2131230894;
 			
-			// aapt resource value: 0x7f0800a6
-			public const int right_side = 2131230886;
+			// aapt resource value: 0x7f0800aa
+			public const int right_side = 2131230890;
 			
 			// aapt resource value: 0x7f08000c
 			public const int save_image_matrix = 2131230732;
@@ -2810,8 +2904,8 @@ namespace ArduinoController.Xamarin.Android
 			// aapt resource value: 0x7f08004d
 			public const int start = 2131230797;
 			
-			// aapt resource value: 0x7f0800a1
-			public const int status_bar_latest_event_content = 2131230881;
+			// aapt resource value: 0x7f0800a5
+			public const int status_bar_latest_event_content = 2131230885;
 			
 			// aapt resource value: 0x7f080078
 			public const int submenuarrow = 2131230840;
@@ -2837,6 +2931,9 @@ namespace ArduinoController.Xamarin.Android
 			// aapt resource value: 0x7f08006b
 			public const int textSpacerNoTitle = 2131230827;
 			
+			// aapt resource value: 0x7f08009c
+			public const int textViewStatus = 2131230876;
+			
 			// aapt resource value: 0x7f08009a
 			public const int text_input_password_toggle = 2131230874;
 			
@@ -2846,8 +2943,8 @@ namespace ArduinoController.Xamarin.Android
 			// aapt resource value: 0x7f080015
 			public const int textinput_error = 2131230741;
 			
-			// aapt resource value: 0x7f0800a7
-			public const int time = 2131230887;
+			// aapt resource value: 0x7f0800ab
+			public const int time = 2131230891;
 			
 			// aapt resource value: 0x7f08001c
 			public const int title = 2131230748;
@@ -2894,8 +2991,8 @@ namespace ArduinoController.Xamarin.Android
 			// aapt resource value: 0x7f080016
 			public const int view_offset_helper = 2131230742;
 			
-			// aapt resource value: 0x7f0800b3
-			public const int visible = 2131230899;
+			// aapt resource value: 0x7f0800b7
+			public const int visible = 2131230903;
 			
 			// aapt resource value: 0x7f08003e
 			public const int withText = 2131230782;
@@ -3104,76 +3201,85 @@ namespace ArduinoController.Xamarin.Android
 			public const int EditProcedureView = 2130968623;
 			
 			// aapt resource value: 0x7f040030
-			public const int LoginView = 2130968624;
+			public const int loading = 2130968624;
 			
 			// aapt resource value: 0x7f040031
-			public const int MainView = 2130968625;
+			public const int loadingimage = 2130968625;
 			
 			// aapt resource value: 0x7f040032
-			public const int notification_action = 2130968626;
+			public const int loadingprogress = 2130968626;
 			
 			// aapt resource value: 0x7f040033
-			public const int notification_action_tombstone = 2130968627;
+			public const int LoginView = 2130968627;
 			
 			// aapt resource value: 0x7f040034
-			public const int notification_media_action = 2130968628;
+			public const int MainView = 2130968628;
 			
 			// aapt resource value: 0x7f040035
-			public const int notification_media_cancel_action = 2130968629;
+			public const int notification_action = 2130968629;
 			
 			// aapt resource value: 0x7f040036
-			public const int notification_template_big_media = 2130968630;
+			public const int notification_action_tombstone = 2130968630;
 			
 			// aapt resource value: 0x7f040037
-			public const int notification_template_big_media_custom = 2130968631;
+			public const int notification_media_action = 2130968631;
 			
 			// aapt resource value: 0x7f040038
-			public const int notification_template_big_media_narrow = 2130968632;
+			public const int notification_media_cancel_action = 2130968632;
 			
 			// aapt resource value: 0x7f040039
-			public const int notification_template_big_media_narrow_custom = 2130968633;
+			public const int notification_template_big_media = 2130968633;
 			
 			// aapt resource value: 0x7f04003a
-			public const int notification_template_custom_big = 2130968634;
+			public const int notification_template_big_media_custom = 2130968634;
 			
 			// aapt resource value: 0x7f04003b
-			public const int notification_template_icon_group = 2130968635;
+			public const int notification_template_big_media_narrow = 2130968635;
 			
 			// aapt resource value: 0x7f04003c
-			public const int notification_template_lines_media = 2130968636;
+			public const int notification_template_big_media_narrow_custom = 2130968636;
 			
 			// aapt resource value: 0x7f04003d
-			public const int notification_template_media = 2130968637;
+			public const int notification_template_custom_big = 2130968637;
 			
 			// aapt resource value: 0x7f04003e
-			public const int notification_template_media_custom = 2130968638;
+			public const int notification_template_icon_group = 2130968638;
 			
 			// aapt resource value: 0x7f04003f
-			public const int notification_template_part_chronometer = 2130968639;
+			public const int notification_template_lines_media = 2130968639;
 			
 			// aapt resource value: 0x7f040040
-			public const int notification_template_part_time = 2130968640;
+			public const int notification_template_media = 2130968640;
 			
 			// aapt resource value: 0x7f040041
-			public const int ProcedureListViewItem = 2130968641;
+			public const int notification_template_media_custom = 2130968641;
 			
 			// aapt resource value: 0x7f040042
-			public const int RegisterView = 2130968642;
+			public const int notification_template_part_chronometer = 2130968642;
 			
 			// aapt resource value: 0x7f040043
-			public const int select_dialog_item_material = 2130968643;
+			public const int notification_template_part_time = 2130968643;
 			
 			// aapt resource value: 0x7f040044
-			public const int select_dialog_multichoice_material = 2130968644;
+			public const int ProcedureListViewItem = 2130968644;
 			
 			// aapt resource value: 0x7f040045
-			public const int select_dialog_singlechoice_material = 2130968645;
+			public const int RegisterView = 2130968645;
 			
 			// aapt resource value: 0x7f040046
-			public const int support_simple_spinner_dropdown_item = 2130968646;
+			public const int select_dialog_item_material = 2130968646;
 			
 			// aapt resource value: 0x7f040047
-			public const int tooltip = 2130968647;
+			public const int select_dialog_multichoice_material = 2130968647;
+			
+			// aapt resource value: 0x7f040048
+			public const int select_dialog_singlechoice_material = 2130968648;
+			
+			// aapt resource value: 0x7f040049
+			public const int support_simple_spinner_dropdown_item = 2130968649;
+			
+			// aapt resource value: 0x7f04004a
+			public const int tooltip = 2130968650;
 			
 			static Layout()
 			{
@@ -3297,11 +3403,11 @@ namespace ArduinoController.Xamarin.Android
 			// aapt resource value: 0x7f090010
 			public const int abc_toolbar_collapse_description = 2131296272;
 			
-			// aapt resource value: 0x7f090028
-			public const int action_settings = 2131296296;
+			// aapt resource value: 0x7f090029
+			public const int action_settings = 2131296297;
 			
-			// aapt resource value: 0x7f090027
-			public const int app_name = 2131296295;
+			// aapt resource value: 0x7f090028
+			public const int app_name = 2131296296;
 			
 			// aapt resource value: 0x7f09001e
 			public const int appbar_scrolling_view_behavior = 2131296286;
@@ -3311,6 +3417,9 @@ namespace ArduinoController.Xamarin.Android
 			
 			// aapt resource value: 0x7f090020
 			public const int character_counter_pattern = 2131296288;
+			
+			// aapt resource value: 0x7f090027
+			public const int library_name = 2131296295;
 			
 			// aapt resource value: 0x7f090021
 			public const int password_toggle_content_description = 2131296289;
@@ -5989,6 +6098,56 @@ namespace ArduinoController.Xamarin.Android
 			
 			// aapt resource value: 0
 			public const int PopupWindowBackgroundState_state_above_anchor = 0;
+			
+			public static int[] ProgressWheel = new int[] {
+					2130772320,
+					2130772321,
+					2130772322,
+					2130772323,
+					2130772324,
+					2130772325,
+					2130772326,
+					2130772327,
+					2130772328,
+					2130772329,
+					2130772330,
+					2130772331};
+			
+			// aapt resource value: 3
+			public const int ProgressWheel_ahBarColor = 3;
+			
+			// aapt resource value: 11
+			public const int ProgressWheel_ahBarLength = 11;
+			
+			// aapt resource value: 10
+			public const int ProgressWheel_ahBarWidth = 10;
+			
+			// aapt resource value: 8
+			public const int ProgressWheel_ahCircleColor = 8;
+			
+			// aapt resource value: 7
+			public const int ProgressWheel_ahDelayMillis = 7;
+			
+			// aapt resource value: 9
+			public const int ProgressWheel_ahRadius = 9;
+			
+			// aapt resource value: 4
+			public const int ProgressWheel_ahRimColor = 4;
+			
+			// aapt resource value: 5
+			public const int ProgressWheel_ahRimWidth = 5;
+			
+			// aapt resource value: 6
+			public const int ProgressWheel_ahSpinSpeed = 6;
+			
+			// aapt resource value: 0
+			public const int ProgressWheel_ahText = 0;
+			
+			// aapt resource value: 1
+			public const int ProgressWheel_ahTextColor = 1;
+			
+			// aapt resource value: 2
+			public const int ProgressWheel_ahTextSize = 2;
 			
 			public static int[] RecycleListView = new int[] {
 					2130772175,

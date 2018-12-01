@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using System.Windows.Input;
+using Acr.UserDialogs;
 using ArduinoController.Xamarin.Core.Exceptions;
 using ArduinoController.Xamarin.Core.Services.Abstractions;
 using MvvmCross.Commands;
@@ -13,11 +14,13 @@ namespace ArduinoController.Xamarin.Core.ViewModels
     {
         private readonly IMvxNavigationService _navigationService;
         private readonly IApiService _apiService;
+        private readonly IUserDialogs _userDialogs;
 
-        public LoginViewModel(IMvxNavigationService navigationService, IApiService apiService)
+        public LoginViewModel(IMvxNavigationService navigationService, IApiService apiService, IUserDialogs userDialogs)
         {
             _navigationService = navigationService;
             _apiService = apiService;
+            _userDialogs = userDialogs;
 
             _registerCommand = new MvxAsyncCommand(Register, () => !IsLoading);
             _loginCommand = new MvxAsyncCommand(Login, () => !IsLoading);
@@ -68,7 +71,7 @@ namespace ArduinoController.Xamarin.Core.ViewModels
                 }
                 catch (UnsuccessfulStatusCodeException ex)
                 {
-
+                    _userDialogs.Alert(ex.ErrorPhrase + " " + ex.Message);
                 }
                 finally
                 {
@@ -88,12 +91,15 @@ namespace ArduinoController.Xamarin.Core.ViewModels
             {
                 await _apiService.CallAsync("users/register", "POST", new {Email, Password});
                 await _apiService.Login(Email, Password);
-                IsLoading = false;
                 await _navigationService.Navigate<MainViewModel>();
             }
             catch (UnsuccessfulStatusCodeException ex)
             {
-
+                _userDialogs.Alert(ex.ErrorPhrase + " " + ex.Message);
+            }
+            finally
+            {
+                IsLoading = false;
             }
         }
     }

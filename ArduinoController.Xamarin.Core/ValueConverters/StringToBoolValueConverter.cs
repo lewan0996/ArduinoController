@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using MvvmCross.Binding.Extensions;
 using MvvmCross.Converters;
 
 namespace ArduinoController.Xamarin.Core.ValueConverters
@@ -8,12 +9,12 @@ namespace ArduinoController.Xamarin.Core.ValueConverters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return System.Convert.ToBoolean(value);
+            return (bool)value ? "1" : "0";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return ((bool) value ? 1 : 0).ToString();
+            return value.ConvertToBoolean();
         }
     }
 }

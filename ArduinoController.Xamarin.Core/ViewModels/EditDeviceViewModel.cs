@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using System.Windows.Input;
+using Acr.UserDialogs;
 using ArduinoController.Xamarin.Core.Dto;
 using ArduinoController.Xamarin.Core.Exceptions;
 using ArduinoController.Xamarin.Core.Services.Abstractions;
@@ -13,10 +14,14 @@ namespace ArduinoController.Xamarin.Core.ViewModels
     {
         private readonly IApiService _apiService;
         private readonly IMvxNavigationService _navigationService;
-        public EditDeviceViewModel(IApiService apiService, IMvxNavigationService navigationService)
+        private readonly IUserDialogs _userDialogs;
+
+        public EditDeviceViewModel(IApiService apiService, IMvxNavigationService navigationService,
+            IUserDialogs userDialogs)
         {
             _apiService = apiService;
             _navigationService = navigationService;
+            _userDialogs = userDialogs;
         }
 
         private bool _editMode;
@@ -45,6 +50,7 @@ namespace ArduinoController.Xamarin.Core.ViewModels
 
         private async Task AddOrEditAndGoBack()
         {
+            _userDialogs.ShowLoading();
             try
             {
                 if (_editMode)
@@ -60,7 +66,11 @@ namespace ArduinoController.Xamarin.Core.ViewModels
             }
             catch (UnsuccessfulStatusCodeException ex)
             {
-                // error message
+                _userDialogs.Alert(ex.ErrorPhrase + " " + ex.Message);
+            }
+            finally
+            {
+                _userDialogs.HideLoading();
             }
 
 

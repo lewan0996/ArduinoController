@@ -178,6 +178,11 @@ namespace ArduinoController.Xamarin.Core.ViewModels
                     throw new Exception("Unknown command type");
             }
         }
+
+        public override void ViewAppearing()
+        {
+            Value = false;
+        }
     }
 
     public class CommandTypeHolder

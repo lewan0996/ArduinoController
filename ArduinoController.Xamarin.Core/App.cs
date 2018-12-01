@@ -1,4 +1,6 @@
-﻿using ArduinoController.Xamarin.Core.ViewModels;
+﻿using Acr.UserDialogs;
+using ArduinoController.Xamarin.Core.ViewModels;
+using MvvmCross;
 using MvvmCross.IoC;
 using MvvmCross.ViewModels;
 
@@ -14,6 +16,8 @@ namespace ArduinoController.Xamarin.Core
                 .EndingWith("Service")
                 .AsInterfaces()
                 .RegisterAsSingleton();
+
+            Mvx.IoCProvider.RegisterSingleton(() => UserDialogs.Instance);
         }
     }
 }

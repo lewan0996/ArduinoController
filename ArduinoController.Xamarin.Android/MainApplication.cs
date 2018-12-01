@@ -1,4 +1,5 @@
 ﻿using System;
+using Acr.UserDialogs;
 using Android.App;
 using Android.Runtime;
 using ArduinoController.Xamarin.Core;
@@ -13,6 +14,7 @@ namespace ArduinoController.Xamarin.Android
         public MainApplication(IntPtr javaReference, JniHandleOwnership transfer)
             : base(javaReference, transfer)
         {
+            UserDialogs.Init(this);
         }
     }
 }
