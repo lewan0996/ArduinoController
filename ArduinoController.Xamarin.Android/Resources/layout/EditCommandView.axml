@@ -11,6 +11,13 @@
 		local:MvxDropDownItemTemplate="@layout/commandtypedropdownitem"
 		local:MvxBind="ItemsSource CommandTypes; HandleItemSelected CommandTypeSelectedCommand"
 	/>
+	<TextView		
+		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:text="Pin number"		
+		android:textSize="12sp"
+		android:textStyle="normal" 
+	/>
 	<EditText
 		android:inputType="number"
 		android:layout_width="match_parent"
@@ -18,7 +25,14 @@
 		android:minWidth="25px"
 		android:minHeight="25px"
 		android:hint="Pin number"		
-		local:MvxBind="Text PinNumber"
+		local:MvxBind="Text PinNumber, Converter=StringToByte"
+	/>
+	<TextView		
+		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:text="Value (0-1)"		
+		android:textSize="12sp"
+		android:textStyle="normal" 
 	/>
 	<EditText
 		android:inputType="number"
@@ -27,7 +41,14 @@
 		android:minWidth="25px"
 		android:minHeight="25px"
 		android:hint="Value"		
-		local:MvxBind="Text Value"
+		local:MvxBind="Text Value, Converter=StringToBool"
+	/>
+	<TextView		
+		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:text="Analog value(0-255)"		
+		android:textSize="12sp"
+		android:textStyle="normal" 
 	/>
 	<EditText
 		android:inputType="number"
@@ -36,7 +57,14 @@
 		android:minWidth="25px"
 		android:minHeight="25px"
 		android:hint="Analog value(0-255)"		
-		local:MvxBind="Text AnalogValue"
+		local:MvxBind="Text AnalogValue, Converter=StringToByte"
+	/>
+	<TextView		
+		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:text="Duration"		
+		android:textSize="12sp"
+		android:textStyle="normal" 
 	/>
 	<EditText
 		android:inputType="number"
@@ -45,7 +73,7 @@
 		android:minWidth="25px"
 		android:minHeight="25px"
 		android:hint="Duration(ms)"		
-		local:MvxBind="Text Duration"
+		local:MvxBind="Text Duration, Converter=StringToInt, Editable If(IsWaitCommand,false,true)"
 	/>
 	<Button
 		android:text="Add"

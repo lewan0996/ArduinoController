@@ -28,11 +28,15 @@ namespace ArduinoController.Xamarin.Core.ViewModels
         private void OnCommandTypeSelected(CommandTypeHolder selectedType)
         {
             SelectedType = selectedType;
+            IsDigitalWriteCommand = selectedType.Type == CommandType.DigitalWrite;
+            IsAnalogWriteCommand = selectedType.Type == CommandType.AnalogWrite;
+            IsWaitCommand = selectedType.Type == CommandType.Wait;
+            IsNegateCommand = selectedType.Type == CommandType.Negate;
         }
 
-        private int _pinNumber;
+        private byte _pinNumber;
 
-        public int PinNumber
+        public byte PinNumber
         {
             get => _pinNumber;
             set => SetProperty(ref _pinNumber, value);
@@ -60,6 +64,38 @@ namespace ArduinoController.Xamarin.Core.ViewModels
         {
             get => _duration;
             set => SetProperty(ref _duration, value);
+        }
+
+        private bool _isWaitCommand;
+
+        public bool IsWaitCommand
+        {
+            get => _isWaitCommand;
+            set => SetProperty(ref _isWaitCommand, value);
+        }
+
+        private bool _isAnalogWriteCommand;
+
+        public bool IsAnalogWriteCommand
+        {
+            get => _isAnalogWriteCommand;
+            set => SetProperty(ref _isAnalogWriteCommand, value);
+        }
+
+        private bool _isDigitalWriteCommand;
+
+        public bool IsDigitalWriteCommand
+        {
+            get => _isDigitalWriteCommand;
+            set => SetProperty(ref _isDigitalWriteCommand, value);
+        }
+
+        private bool _isNegateCommand;
+
+        public bool IsNegateCommand
+        {
+            get => _isNegateCommand;
+            set => SetProperty(ref _isNegateCommand, value);
         }
 
         public override void Prepare(short order)
@@ -116,21 +152,21 @@ namespace ArduinoController.Xamarin.Core.ViewModels
                     return new DigitalWriteCommandDto
                     {
                         Order = _order,
-                        //PinNumber = PinNumber,
+                        PinNumber = PinNumber,
                         Value = Value
                     };
                 case CommandType.AnalogWrite:
                     return new AnalogWriteCommandDto
                     {
                         Order = _order,
-                       // PinNumber = PinNumber,
+                        PinNumber = PinNumber,
                         Value = AnalogValue
                     };
                 case CommandType.Negate:
                     return new NegateCommandDto
                     {
                         Order = _order,
-                        //PinNumber = PinNumber
+                        PinNumber = PinNumber
                     };
                 case CommandType.Wait:
                     return new WaitCommandDto
