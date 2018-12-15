@@ -11,6 +11,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArduinoController.DataAcces
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ArduinoController.Arduino", "ArduinoController.Arduino\ArduinoController.Arduino.vcxproj", "{12C8DD05-B439-4CF3-ACD0-D86414FC25F1}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArduinoController.Xamarin.Core", "ArduinoController.Xamarin.Core\ArduinoController.Xamarin.Core.csproj", "{81885ACE-0BDA-4BA2-B81A-11057972CF05}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArduinoController.Xamarin.Android", "ArduinoController.Xamarin.Android\ArduinoController.Xamarin.Android.csproj", "{9E305D85-C9A3-41C8-A1FB-D45D65AF09AE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +53,26 @@ Global
 		{12C8DD05-B439-4CF3-ACD0-D86414FC25F1}.Release|Any CPU.ActiveCfg = Release|Win32
 		{12C8DD05-B439-4CF3-ACD0-D86414FC25F1}.Release|x86.ActiveCfg = Release|Win32
 		{12C8DD05-B439-4CF3-ACD0-D86414FC25F1}.Release|x86.Build.0 = Release|Win32
+		{81885ACE-0BDA-4BA2-B81A-11057972CF05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81885ACE-0BDA-4BA2-B81A-11057972CF05}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81885ACE-0BDA-4BA2-B81A-11057972CF05}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{81885ACE-0BDA-4BA2-B81A-11057972CF05}.Debug|x86.Build.0 = Debug|Any CPU
+		{81885ACE-0BDA-4BA2-B81A-11057972CF05}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81885ACE-0BDA-4BA2-B81A-11057972CF05}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81885ACE-0BDA-4BA2-B81A-11057972CF05}.Release|x86.ActiveCfg = Release|Any CPU
+		{81885ACE-0BDA-4BA2-B81A-11057972CF05}.Release|x86.Build.0 = Release|Any CPU
+		{9E305D85-C9A3-41C8-A1FB-D45D65AF09AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E305D85-C9A3-41C8-A1FB-D45D65AF09AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E305D85-C9A3-41C8-A1FB-D45D65AF09AE}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{9E305D85-C9A3-41C8-A1FB-D45D65AF09AE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9E305D85-C9A3-41C8-A1FB-D45D65AF09AE}.Debug|x86.Build.0 = Debug|Any CPU
+		{9E305D85-C9A3-41C8-A1FB-D45D65AF09AE}.Debug|x86.Deploy.0 = Debug|Any CPU
+		{9E305D85-C9A3-41C8-A1FB-D45D65AF09AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E305D85-C9A3-41C8-A1FB-D45D65AF09AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E305D85-C9A3-41C8-A1FB-D45D65AF09AE}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{9E305D85-C9A3-41C8-A1FB-D45D65AF09AE}.Release|x86.ActiveCfg = Release|Any CPU
+		{9E305D85-C9A3-41C8-A1FB-D45D65AF09AE}.Release|x86.Build.0 = Release|Any CPU
+		{9E305D85-C9A3-41C8-A1FB-D45D65AF09AE}.Release|x86.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

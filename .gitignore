@@ -340,3 +340,5 @@ ASALocalRun/
 ArduinoController\.Arduino/Debug/board\.buildinfo
 
 ArduinoController\.Api/appsettings\.json
+
+ArduinoController\.Api/obj/Debug/netcoreapp2\.0/

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:local="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+	<EditText		
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:minWidth="25px"
+		android:minHeight="25px"
+		android:hint="Name"		
+		local:MvxBind="Text Name"
+	/>
+	<EditText		
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:hint="Mac address"		
+		local:MvxBind="Text MacAddress"
+	/>
+	<Button
+		android:text="Save"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		local:MvxBind="Click SaveCommand"/>
+</LinearLayout>
