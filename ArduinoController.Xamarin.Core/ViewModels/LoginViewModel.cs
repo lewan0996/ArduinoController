@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Acr.UserDialogs;
 using ArduinoController.Xamarin.Core.Exceptions;
@@ -89,13 +90,17 @@ namespace ArduinoController.Xamarin.Core.ViewModels
             IsLoading = true;
             try
             {
-                await _apiService.CallAsync("users/register", "POST", new {Email, Password});
+                await _apiService.CallAsync("users/register", "POST", new {Email, Password}, false);
                 await _apiService.Login(Email, Password);
                 await _navigationService.Navigate<MainViewModel>();
             }
             catch (UnsuccessfulStatusCodeException ex)
             {
                 _userDialogs.Alert(ex.ErrorPhrase + " " + ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _userDialogs.Alert(ex.Message);
             }
             finally
             {

@@ -11,6 +11,9 @@
 #include "Procedure.h"
 #include "CommandFactory.h"
 
+const auto ssid = "iPhone (Marcin)";
+const auto pass = "Password!1234";
+
 int access_point_start_time;
 unsigned long access_point_duration = 10000;
 
@@ -89,12 +92,6 @@ String generate_iot_hub_connection_string(const String& mac_address)
 
 void init_wifi()
 {
-	// ReSharper disable once StringLiteralTypo
-	const auto ssid = "iPhone (Marcin)";
-	// ReSharper disable once StringLiteralTypo
-	// ReSharper disable once CommentTypo
-	const auto pass = "Password!1234";
-
 	Serial.printf("Attempting to connect to SSID: %s.\r\n", ssid);
 
 	WiFi.begin(ssid, pass);
