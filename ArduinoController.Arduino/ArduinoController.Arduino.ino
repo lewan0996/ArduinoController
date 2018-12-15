@@ -93,7 +93,7 @@ void init_wifi()
 	const auto ssid = "iPhone (Marcin)";
 	// ReSharper disable once StringLiteralTypo
 	// ReSharper disable once CommentTypo
-	const auto pass = "dupsko123"; // do zmiany
+	const auto pass = "Password!1234";
 
 	Serial.printf("Attempting to connect to SSID: %s.\r\n", ssid);
 
