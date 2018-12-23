@@ -1,50 +1,50 @@
 #include "IoTHubClient.h"
 
-IoTHubClient* IoTHubClient::instance;
+iot_hub_client* iot_hub_client::instance;
 
-IoTHubClient::IoTHubClient(const String& connection_string, 
+iot_hub_client::iot_hub_client(const String& connection_string, 
 	std::pair<int, char*>(*handle_direct_method_callback)
 	(const char *method_name, const char *payload, size_t payload_size))
 {
-	HandleDirectMethodCallback = handle_direct_method_callback;
-	_connectionString = connection_string;
-	Serial.println(_connectionString);
+	handle_direct_method_callback_ = handle_direct_method_callback;
+	connection_string_ = connection_string;
+	Serial.println(connection_string_);
 	instance = this; // solution to member function vs "normal" function pointer
 }
 
 int device_method_callback_non_member(const char * method_name, const unsigned char * payload, size_t size, unsigned char ** response, size_t * response_size, void * user_context_callback)
 {
-	return IoTHubClient::instance->device_method_callback(method_name, payload, size, response, response_size, user_context_callback);
+	return iot_hub_client::instance->device_method_callback(method_name, payload, size, response, response_size, user_context_callback);
 }
 
-void IoTHubClient::initialize()
+void iot_hub_client::initialize()
 {
 	Serial.println("Initializing IoTHub client...");
 	init_time();	
 	
-	_iotHubClientHandle = IoTHubClient_LL_CreateFromConnectionString(_connectionString.c_str(), MQTT_Protocol);
-	if (_iotHubClientHandle == nullptr)
+	iot_hub_client_handle_ = IoTHubClient_LL_CreateFromConnectionString(connection_string_.c_str(), MQTT_Protocol);
+	if (iot_hub_client_handle_ == nullptr)
 	{
 		Serial.println("Failed to initialize IoT Hub client");
 		return;
 	}
 
-	const IOTHUB_CLIENT_RESULT result = IoTHubClient_LL_SetDeviceMethodCallback(_iotHubClientHandle, device_method_callback_non_member, NULL);
+	const IOTHUB_CLIENT_RESULT result = IoTHubClient_LL_SetDeviceMethodCallback(iot_hub_client_handle_, device_method_callback_non_member, NULL);
 
 	Serial.println(result);
 	Serial.println("IoT hub initialized");
 }
 
-void IoTHubClient::do_work()
+void iot_hub_client::do_work()
 {
-	IoTHubClient_LL_DoWork(_iotHubClientHandle);
+	IoTHubClient_LL_DoWork(iot_hub_client_handle_);
 }
 
-int IoTHubClient::device_method_callback(const char * method_name, const unsigned char * payload, size_t payload_size, unsigned char ** response, size_t * response_size, void * user_context_callback)
+int iot_hub_client::device_method_callback(const char * method_name, const unsigned char * payload, size_t payload_size, unsigned char ** response, size_t * response_size, void * user_context_callback)
 {
 	Serial.printf("Try to invoke method %s.\r\n", method_name);
 
-	const std::pair<int, char*> result = HandleDirectMethodCallback(method_name, reinterpret_cast<const char*>(payload), payload_size);
+	const std::pair<int, char*> result = handle_direct_method_callback_(method_name, reinterpret_cast<const char*>(payload), payload_size);
 
 	*response_size = strlen(result.second);
 	*response = static_cast<unsigned char *>(malloc(*response_size));
@@ -53,7 +53,7 @@ int IoTHubClient::device_method_callback(const char * method_name, const unsigne
 	return result.first;
 }
 
-void IoTHubClient::init_time()
+void iot_hub_client::init_time()
 {
 	configTime(0, 0, "pool.ntp.org", "time.nist.gov");
 

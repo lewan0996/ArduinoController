@@ -15,14 +15,14 @@
 
 class procedure {
 public:
-	explicit procedure(CommandFactory* command_factory);
+	explicit procedure(command_factory* command_factory);
 	~procedure();
 	void execute();
 	void load_json(const char* procedure_json);
 	std::vector<command*> commands;
 	bool is_valid = false;
 private:
-	CommandFactory * command_factory_;
+	command_factory * command_factory_;
 };
 
 #endif

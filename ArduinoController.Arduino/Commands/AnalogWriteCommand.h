@@ -9,18 +9,17 @@
 
 #include "Command.h"
 
-class AnalogWriteCommand :
+class analog_write_command :
 	public command
 {
-public:	
-	AnalogWriteCommand(command_args* args);
-	~AnalogWriteCommand();
-	void execute();
-	void SetPinNumber(uint8_t pinNumber);
-	void SetValue(uint8_t value);
+public:
+	explicit analog_write_command(command_args* args);	
+	void execute() override;
+	void set_pin_number(uint8_t pin_number);
+	void set_value(uint8_t value);
 private:
-	uint8_t _pinNumber;
-	uint8_t _value;
+	uint8_t pin_number_;
+	uint8_t value_;
 };
 
 #endif

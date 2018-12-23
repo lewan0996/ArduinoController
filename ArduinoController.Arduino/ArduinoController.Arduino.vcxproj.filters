@@ -16,6 +16,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ArduinoController.Arduino.ino" />
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__vm\.ArduinoController.Arduino.vsarduino.h">

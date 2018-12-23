@@ -13,18 +13,18 @@
 #include <AzureIoTProtocol_MQTT.h>
 #include <AzureIoTUtility.h>
 
-class IoTHubClient
+class iot_hub_client
 {
 public:
-	IoTHubClient(const String& connectionString, std::pair<int, char*>(*handleDirectMethodCallback)(const char* methodName, const char* payload, size_t payloadSize));
+	iot_hub_client(const String& connection_string, std::pair<int, char*>(*handle_direct_method_callback)(const char* method_name, const char* payload, size_t payload_size));
 	void initialize();
 	void do_work();
-	static IoTHubClient* instance;
-	int device_method_callback(const char *methodName, const unsigned char *payload, size_t size, unsigned char **response, size_t *response_size, void *userContextCallback);
+	static iot_hub_client* instance;
+	int device_method_callback(const char *method_name, const unsigned char *payload, size_t size, unsigned char **response, size_t *response_size, void *user_context_callback);
 private:
-	IOTHUB_CLIENT_LL_HANDLE _iotHubClientHandle{};
-	String _connectionString;
-	std::pair<int, char*>(*HandleDirectMethodCallback)(const char* methodName, const char* payload, size_t payloadSize);
+	IOTHUB_CLIENT_LL_HANDLE iot_hub_client_handle_{};
+	String connection_string_;
+	std::pair<int, char*>(*handle_direct_method_callback_)(const char* methodName, const char* payload, size_t payloadSize);
 	static void init_time();
 };
 

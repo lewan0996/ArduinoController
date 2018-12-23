@@ -9,8 +9,7 @@
 #include "WProgram.h"
 #endif
 class command {
-public:
-	virtual ~command() = default;
+public:	
 	explicit command(command_args* args);
 	virtual void execute() = 0;
 	unsigned short order;

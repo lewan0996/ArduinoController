@@ -18,8 +18,8 @@ int access_point_start_time;
 unsigned long access_point_duration = 10000;
 
 bool is_access_point_initialization_done;
-CommandFactory* command_factory = new CommandFactory();
-IoTHubClient* iot_hub_client;
+command_factory* command_factory_ = new command_factory();
+iot_hub_client* iot_hub_client_;
 
 std::pair<int, char*> handle_direct_method_callback(const char* method_name, const char* payload, size_t payload_size);
 String generate_iot_hub_connection_string(const String& mac_address);
@@ -35,7 +35,7 @@ void setup()
 
 	Serial.println(connection_string);
 
-	iot_hub_client = new IoTHubClient(connection_string, handle_direct_method_callback);
+	iot_hub_client_ = new iot_hub_client(connection_string, handle_direct_method_callback);
 
 	String ssid = "ESP_" + mac_address;
 	Serial.println("Enabling access point with SSID: " + ssid);
@@ -69,11 +69,11 @@ void loop()
 		is_access_point_initialization_done = true;
 		init_wifi();
 
-		iot_hub_client->initialize();
+		iot_hub_client_->initialize();
 	}
 	else if (is_access_point_initialization_done)
 	{
-		iot_hub_client->do_work();
+		iot_hub_client_->do_work();
 		delay(10);
 	}
 }
@@ -105,7 +105,7 @@ void init_wifi()
 
 bool handle_execute_procedure_call(const char* payload)
 {
-	auto procedure_to_call = new procedure(command_factory);
+	auto procedure_to_call = new procedure(command_factory_);
 	Serial.println("Parsing json...");
 	procedure_to_call->load_json(payload);
 	if (procedure_to_call->is_valid)

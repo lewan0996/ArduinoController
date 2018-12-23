@@ -9,16 +9,15 @@
 #include "WProgram.h"
 #endif
 
-class WaitCommand :
+class wait_command :
 	public command
 {
-public:	
-	WaitCommand(command_args* args);
-	~WaitCommand();
+public:
+	explicit wait_command(command_args* args);	
 	void set_duration(unsigned long duration);
-	void execute();
+	void execute() override;
 private:
-	unsigned long _duration;
+	unsigned long duration_;
 };
 
 #endif

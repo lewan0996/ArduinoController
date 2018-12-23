@@ -1,6 +1,6 @@
 #include "Procedure.h"
 
-procedure::procedure(CommandFactory* command_factory)
+procedure::procedure(command_factory* command_factory)
 {
 	command_factory_ = command_factory;
 }

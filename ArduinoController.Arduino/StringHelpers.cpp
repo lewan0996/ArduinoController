@@ -1,15 +1,9 @@
 #include "StringHelpers.h"
 
-
-
-StringHelpers::StringHelpers()
+string_helpers::string_helpers()
 = default;
 
-
-StringHelpers::~StringHelpers()
-= default;
-
-std::vector<char*> StringHelpers::split(char* string, const char* delimiter)
+std::vector<char*> string_helpers::split(char* string, const char* delimiter)
 {
 	std::vector<char*> result;
 	auto pch = strtok(string, delimiter);

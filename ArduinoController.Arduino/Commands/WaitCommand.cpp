@@ -1,25 +1,21 @@
 #include "WaitCommand.h"
 
-WaitCommand::WaitCommand(command_args* args) : command(args)
+wait_command::wait_command(command_args* args) : command(args)
 {
-	_duration = args->duration;
+	duration_ = args->duration;
 }
 
-WaitCommand::~WaitCommand()
+void wait_command::set_duration(const unsigned long duration)
 {
+	duration_ = duration;
 }
 
-void WaitCommand::set_duration(const unsigned long duration)
-{
-	_duration = duration;
-}
-
-void WaitCommand::execute()
+void wait_command::execute()
 {
 	Serial.print("Executing Wait for ");	
-	Serial.println(_duration);
+	Serial.println(duration_);
 
-	delay(_duration);
+	delay(duration_);
 
 	Serial.println("Wait done.");
 }

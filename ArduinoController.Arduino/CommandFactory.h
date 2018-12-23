@@ -18,14 +18,13 @@
 
 #include <ArduinoJson.h>
 
-class CommandFactory
+class command_factory
 {
 public:
-	CommandFactory();
-	~CommandFactory();
-	command* create_command(const char* commandName, command_args* args);
+	command_factory();	
+	command* create_command(const char* command_name, command_args* args);
 private:
-	std::map<const char*, std::function<command*(command_args* args)>, CompareCStrings> _commands;
+	std::map<const char*, std::function<command*(command_args* args)>, compare_c_strings> _commands;
 };
 
 #endif

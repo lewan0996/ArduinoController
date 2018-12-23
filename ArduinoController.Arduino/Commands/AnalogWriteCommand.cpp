@@ -1,33 +1,30 @@
 #include "AnalogWriteCommand.h"
 
-AnalogWriteCommand::AnalogWriteCommand(command_args* args) :command(args)
+analog_write_command::analog_write_command(command_args* args) :command(args)
 {
-	_pinNumber = args->pin_number;
-	_value = args->value;
+	pin_number_ = args->pin_number;
+	value_ = args->value;
 }
 
-AnalogWriteCommand::~AnalogWriteCommand()
-= default;
-
-void AnalogWriteCommand::execute()
+void analog_write_command::execute()
 {
 	Serial.print("Executing analog write ");
-	Serial.print(_value);
+	Serial.print(value_);
 	Serial.print(" to pin ");
-	Serial.println(_pinNumber);
+	Serial.println(pin_number_);
 
-	pinMode(_pinNumber, OUTPUT);
-	analogWrite(_pinNumber, _value);
+	pinMode(pin_number_, OUTPUT);
+	analogWrite(pin_number_, value_);
 
 	Serial.println("AnalogWrite Done.");
 }
 
-void AnalogWriteCommand::SetPinNumber(uint8_t pinNumber)
+void analog_write_command::set_pin_number(uint8_t pinNumber)
 {
-	_pinNumber = pinNumber;
+	pin_number_ = pinNumber;
 }
 
-void AnalogWriteCommand::SetValue(uint8_t value)
+void analog_write_command::set_value(uint8_t value)
 {
-	_value = value;
+	value_ = value;
 }

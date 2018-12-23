@@ -9,13 +9,12 @@
 #include "WProgram.h"
 #endif
 
-class NegateCommand :
+class negate_command :
 	public command
 {
-public:	
-	NegateCommand(command_args* args);
-	~NegateCommand();
-	void execute();
+public:
+	explicit negate_command(command_args* args);	
+	void execute() override;
 private:
 	uint8_t _pinNumber;
 };

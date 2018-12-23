@@ -8,18 +8,18 @@
 #include "WProgram.h"
 #endif
 
-class DigitalWriteCommand :
+class digital_write_command :
 	public command
 {
-public:	
-	DigitalWriteCommand(command_args* args);
-	~DigitalWriteCommand();
-	void set_pin_number(uint8_t pinNumber);
+public:
+	explicit digital_write_command(command_args* args);
+	~digital_write_command();
+	void set_pin_number(uint8_t pin_number);
 	void set_value(uint8_t value);
-	void execute();
+	void execute() override;
 private:
-	uint8_t _pinNumber;
-	uint8_t _value;
+	uint8_t pin_number_;
+	uint8_t value_;
 };
 
 #endif
