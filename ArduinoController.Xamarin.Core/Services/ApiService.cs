@@ -49,8 +49,8 @@ namespace ArduinoController.Xamarin.Core.Services
         public bool IsLoggedIn => _appSettings.Contains("token");
 
 
-        public async Task<TResponse> CallAsync<TResponse>(string pathToResource, string httpMethod, object body = null,
-            bool authorize = true)
+        public async Task<TResponse> CallAsync<TResponse>(string pathToResource, 
+            string httpMethod, object body = null, bool authorize = true)
         {
             var uri = new Uri(Configuration.ApiUrl + "/" + pathToResource);
             var content = body != null
@@ -74,16 +74,15 @@ namespace ArduinoController.Xamarin.Core.Services
             {
                 case "GET":
                     response = _httpClient.GetAsync(uri).GetAwaiter().GetResult();
-                    //response = await _httpClient.GetAsync(uri);
                     break;
                 case "POST":
                     response= _httpClient.PostAsync(uri, content).GetAwaiter().GetResult();
                     break;
                 case "PUT":
-                    response = _httpClient.PutAsync(uri, content).GetAwaiter().GetResult(); // it crashes on await - don't know why
+                    response = _httpClient.PutAsync(uri, content).GetAwaiter().GetResult();
                     break;
                 case "DELETE":
-                    response = _httpClient.DeleteAsync(uri).GetAwaiter().GetResult(); // it crashes on await - don't know why
+                    response = _httpClient.DeleteAsync(uri).GetAwaiter().GetResult();
                     break;
                 default:
                     throw new Exception("Unsupported http method");

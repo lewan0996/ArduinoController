@@ -8,6 +8,7 @@
 #endif
 
 #include "Command.h"
+#include <Servo.h>
 
 class analog_write_command :
 	public command
@@ -20,6 +21,7 @@ public:
 private:
 	uint8_t pin_number_;
 	uint8_t value_;
+	Servo servo_;
 };
 
 #endif

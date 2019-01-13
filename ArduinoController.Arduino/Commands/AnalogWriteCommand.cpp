@@ -1,4 +1,5 @@
 #include "AnalogWriteCommand.h"
+#include <Servo.h>
 
 analog_write_command::analog_write_command(command_args* args) :command(args)
 {
@@ -13,8 +14,11 @@ void analog_write_command::execute()
 	Serial.print(" to pin ");
 	Serial.println(pin_number_);
 
-	pinMode(pin_number_, OUTPUT);
-	analogWrite(pin_number_, value_);
+	//pinMode(pin_number_, OUTPUT);
+	//analogWrite(pin_number_, value_);
+	
+	servo_.attach(pin_number_);
+	servo_.write(value_);	
 
 	Serial.println("AnalogWrite Done.");
 }
